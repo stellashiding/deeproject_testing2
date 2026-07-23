@@ -43,12 +43,23 @@ export function exportFramework() {
   const { framework, domainScenario } = getState();
   const scenarioName = domainScenario.domain.trim() || "Participant-defined domain";
   const exportedDomainScenario = { ...domainScenario, scenarioId: "participant-defined-domain", scenarioName };
+  const criteriaWithChecks = framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion) }));
+  const qualitySummary = {
+    minimumCriteriaRequired: 2,
+    criterionCompletionRule: "all_four_core_requirements",
+    requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
+    optionalChecks: ["distinctAnchors", "failureTags"],
+    criteriaCount: criteriaWithChecks.length,
+    coreCompleteCriteriaCount: criteriaWithChecks.filter(criterion => criterion.qualityChecks.coreComplete).length,
+    allCriteriaCoreComplete: criteriaWithChecks.length >= 2 && criteriaWithChecks.every(criterion => criterion.qualityChecks.coreComplete)
+  };
   downloadJson(`deeproject-framework-${framework.id.slice(0, 8)}.json`, {
     taskType: "participant_defined_domain",
     scenarioId: "participant-defined-domain",
     scenarioName,
     domainScenario: exportedDomainScenario,
-    frameworkArtifact: { ...framework, scenarioId: "participant-defined-domain", scenarioName, domain: domainScenario.domain, domainScenario: exportedDomainScenario, criteria: framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion) })) }
+    qualitySummary,
+    frameworkArtifact: { ...framework, scenarioId: "participant-defined-domain", scenarioName, domain: domainScenario.domain, domainScenario: exportedDomainScenario, criteria: criteriaWithChecks }
   });
 }
 
