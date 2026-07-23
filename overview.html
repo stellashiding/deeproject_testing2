@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeproject — Behavior Overview</title>
+  <style>
+    :root{
+      --bg:#07090d;
+      --surface:#10141b;
+      --surface-soft:#0c1016;
+      --border:rgba(255,255,255,.085);
+      --text:#f7f9fc;
+      --muted:#98a2b2;
+      --subtle:#667182;
+      --reasoning:#72a9ff;
+      --helpfulness:#62d7a0;
+      --consistency:#f0aa5b;
+      --context:#b48cff;
+      --good:#69daa6;
+      --mid:#ebbd66;
+      --low:#ef7f8e;
+      --shadow:0 28px 80px rgba(0,0,0,.34);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 84% -10%,rgba(114,169,255,.12),transparent 30%),
+        radial-gradient(circle at 10% 6%,rgba(180,140,255,.09),transparent 28%),
+        var(--bg);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      min-height:72px;
+      padding:16px 36px;
+      border-bottom:1px solid var(--border);
+      background:rgba(7,9,13,.78);
+      backdrop-filter:blur(20px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:21px;
+      font-weight:800;
+      letter-spacing:-.045em;
+    }
+
+    .brand-mark{
+      width:32px;
+      height:32px;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background:linear-gradient(135deg,rgba(114,169,255,.98),rgba(180,140,255,.92));
+      box-shadow:0 10px 30px rgba(114,169,255,.28),inset 0 1px 0 rgba(255,255,255,.24);
+      color:white;
+      font-size:17px;
+      font-weight:850;
+      letter-spacing:-.05em;
+      text-shadow:0 1px 8px rgba(255,255,255,.28);
+    }
+
+    .header-entry{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      min-height:42px;
+      padding:0 15px;
+      border:1px solid rgba(140,181,255,.34);
+      border-radius:12px;
+      background:linear-gradient(135deg,rgba(114,169,255,.15),rgba(180,140,255,.09));
+      color:#f7f9ff;
+      font-size:13px;
+      font-weight:750;
+      transition:.2s ease;
+    }
+
+    .header-entry:hover{
+      transform:translateY(-1px);
+      border-color:rgba(174,203,255,.62);
+      box-shadow:0 12px 34px rgba(73,112,210,.17);
+    }
+
+    .page{
+      width:100%;
+      max-width:1450px;
+      margin:0 auto;
+      padding:34px 38px 72px;
+    }
+
+    .eyebrow{
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0 0 28px;
+      font-size:34px;
+      line-height:1.08;
+      letter-spacing:-.045em;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(310px,.75fr);
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .hero-copy,.health-card,.panel{
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.018));
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-copy{
+      position:relative;
+      overflow:hidden;
+      min-height:292px;
+      padding:36px;
+    }
+
+    .hero-copy::after{
+      content:"";
+      position:absolute;
+      width:320px;
+      height:320px;
+      right:-120px;
+      bottom:-165px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(114,169,255,.18),transparent 68%);
+      pointer-events:none;
+    }
+
+    .hero-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      margin-bottom:20px;
+      color:#ccdaff;
+      font-size:12px;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--good);
+      box-shadow:0 0 0 7px rgba(105,218,166,.08);
+    }
+
+    .hero-copy h2{
+      max-width:830px;
+      margin:0;
+      font-size:46px;
+      line-height:1.06;
+      letter-spacing:-.058em;
+    }
+
+    .hero-copy p{
+      max-width:720px;
+      margin:18px 0 0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.66;
+    }
+
+    .meta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px 30px;
+      margin-top:30px;
+    }
+
+    .meta-item strong{
+      display:block;
+      font-size:21px;
+      letter-spacing:-.03em;
+    }
+
+    .meta-item span{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .health-card{
+      min-height:292px;
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .health-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .health-title{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .health-note{
+      margin-top:5px;
+      color:var(--subtle);
+      font-size:11px;
+      line-height:1.45;
+    }
+
+    .delta{
+      padding:5px 8px;
+      border:1px solid rgba(98,215,160,.18);
+      border-radius:999px;
+      background:rgba(98,215,160,.08);
+      color:var(--good);
+      font-size:11px;
+      white-space:nowrap;
+    }
+
+    .snapshot-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .snapshot-metric{
+      min-height:102px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.075);
+      border-radius:14px;
+      background:rgba(255,255,255,.018);
+    }
+
+    .snapshot-metric.primary{
+      border-color:rgba(239,127,142,.22);
+      background:linear-gradient(135deg,rgba(239,127,142,.105),rgba(255,255,255,.018));
+    }
+
+    .snapshot-label{
+      color:var(--muted);
+      font-size:10px;
+      font-weight:720;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+    }
+
+    .snapshot-value{
+      margin-top:10px;
+      font-size:30px;
+      line-height:1;
+      font-weight:830;
+      letter-spacing:-.055em;
+    }
+
+    .snapshot-value.risk{color:#ffc0c8}
+
+    .snapshot-unit{
+      margin-left:4px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:0;
+    }
+
+    .snapshot-detail{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.42;
+    }
+
+    .snapshot-detail strong{
+      color:#eef2f8;
+      font-weight:720;
+    }
+
+    .snapshot-footer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin-top:12px;
+      padding:11px 12px;
+      border:1px solid rgba(239,127,142,.13);
+      border-radius:12px;
+      background:rgba(239,127,142,.055);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.45;
+    }
+
+    .snapshot-footer-icon{
+      color:#ffc0c8;
+      font-size:12px;
+      line-height:1.3;
+    }
+
+    .panel{
+      padding:23px;
+      margin-bottom:16px;
+    }
+
+    .panel-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.025em;
+    }
+
+    .panel-subtitle{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .legend-item{display:flex;align-items:center;gap:6px}
+    .dot{width:8px;height:8px;border-radius:50%}
+
+    .map-controls{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:4px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:rgba(255,255,255,.025);
+    }
+
+    .map-tab{
+      min-height:34px;
+      padding:0 13px;
+      border:0;
+      border-radius:9px;
+      background:transparent;
+      color:var(--muted);
+      font:inherit;
+      font-size:11px;
+      font-weight:740;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .map-tab:hover{color:var(--text)}
+
+    .map-tab.active{
+      background:linear-gradient(135deg,rgba(114,169,255,.18),rgba(180,140,255,.12));
+      color:#f6f8ff;
+      box-shadow:inset 0 0 0 1px rgba(140,181,255,.18);
+    }
+
+    .map-view[hidden]{display:none!important}
+
+
+
+    .orbit-toolbar{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:14px;
+    }
+
+    .orbit-control{
+      width:min(360px,100%);
+    }
+
+    .orbit-control label{
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:730;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .orbit-control select{
+      width:100%;
+      min-height:42px;
+      padding:0 13px;
+      border:1px solid var(--border);
+      border-radius:11px;
+      background:var(--surface-soft);
+      color:var(--text);
+      font:inherit;
+      font-size:12px;
+    }
+
+    .orbit-summary{
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.45;
+      text-align:right;
+    }
+
+    .orbit-stage{
+      position:relative;
+      min-height:520px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(124,92,255,.08), transparent 24%),
+        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+        rgba(255,255,255,.012);
+      background-size:auto,44px 44px,44px 44px,auto;
+    }
+
+    .orbit-svg{
+      display:block;
+      width:100%;
+      height:auto;
+      min-height:520px;
+    }
+
+    .orbit-ring{
+      fill:none;
+      stroke:rgba(255,255,255,.08);
+      stroke-width:1;
+      stroke-dasharray:4 7;
+    }
+
+    .orbit-ring-label{
+      fill:var(--subtle);
+      font-size:9px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .orbit-axis{
+      stroke:rgba(255,255,255,.05);
+      stroke-width:1;
+    }
+
+    .orbit-axis-label{
+      fill:var(--subtle);
+      font-size:9px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .orbit-path{
+      fill:none;
+      stroke:rgba(190,180,255,.42);
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      filter:url(#softGlow);
+    }
+
+    .orbit-node{
+      cursor:pointer;
+      stroke:#090c11;
+      stroke-width:3;
+      transition:.16s ease;
+      filter:url(#nodeGlow);
+    }
+
+    .orbit-node:hover,
+    .orbit-node:focus{
+      stroke-width:5;
+      outline:none;
+    }
+
+    .orbit-node-label{
+      fill:var(--text);
+      font-size:10px;
+      font-weight:760;
+      text-anchor:middle;
+      pointer-events:none;
+    }
+
+    .orbit-center{
+      fill:rgba(124,92,255,.18);
+      stroke:rgba(190,180,255,.88);
+      stroke-width:1.5;
+      filter:url(#centerGlow);
+    }
+
+    .orbit-center-core{
+      fill:var(--accent);
+      opacity:.92;
+    }
+
+    .orbit-center-label{
+      fill:var(--text);
+      font-size:12px;
+      font-weight:780;
+      text-anchor:middle;
+    }
+
+    .orbit-center-sub{
+      fill:var(--muted);
+      font-size:9px;
+      text-anchor:middle;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .orbit-selected-halo{
+      fill:none;
+      stroke:rgba(255,255,255,.65);
+      stroke-width:1.5;
+      stroke-dasharray:3 4;
+      pointer-events:none;
+    }
+
+    .orbit-detail{
+      position:absolute;
+      right:16px;
+      top:16px;
+      width:220px;
+      padding:13px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:14px;
+      background:rgba(8,11,16,.82);
+      backdrop-filter:blur(18px);
+      box-shadow:0 18px 45px rgba(0,0,0,.28);
+    }
+
+    .orbit-detail-kicker{
+      color:var(--subtle);
+      font-size:9px;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .orbit-detail-title{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:790;
+    }
+
+    .orbit-detail-score{
+      margin-top:10px;
+      font-size:25px;
+      font-weight:820;
+      letter-spacing:-.04em;
+    }
+
+    .orbit-detail-score span{
+      color:var(--muted);
+      font-size:11px;
+      font-weight:650;
+      letter-spacing:0;
+    }
+
+    .orbit-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .orbit-detail-row strong{
+      color:var(--text);
+      font-weight:720;
+    }
+
+    .orbit-tag{
+      display:inline-flex;
+      margin:9px 5px 0 0;
+      padding:4px 7px;
+      border:1px solid rgba(239,127,142,.18);
+      border-radius:999px;
+      background:rgba(239,127,142,.07);
+      color:#ffc1c9;
+      font-size:9px;
+    }
+
+    .orbit-note{
+      margin-top:11px;
+      color:var(--subtle);
+      font-size:10px;
+      line-height:1.5;
+    }
+
+    @media(max-width:760px){
+      .orbit-toolbar{align-items:stretch;flex-direction:column}
+      .orbit-summary{text-align:left}
+      .orbit-detail{
+        position:static;
+        width:auto;
+        margin:12px;
+      }
+      .orbit-stage{min-height:620px}
+      .orbit-svg{min-height:470px}
+    }
+
+
+    .behavior-map-wrap{overflow:auto;padding-bottom:3px}
+
+    .behavior-map{
+      width:100%;
+      min-width:860px;
+      border-collapse:separate;
+      border-spacing:7px;
+    }
+
+    .behavior-map th{
+      padding:0 8px 7px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:650;
+      text-align:center;
+    }
+
+    .behavior-map th:first-child{text-align:left}
+
+    .behavior-map td{
+      min-width:98px;
+      height:52px;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:11px;
+      text-align:center;
+      font-size:13px;
+      font-weight:750;
+      transition:.18s ease;
+    }
+
+    .behavior-map td:not(.scenario-name):hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,.2);
+      filter:brightness(1.12);
+    }
+
+    .scenario-name{
+      min-width:205px!important;
+      padding-left:0;
+      border-color:transparent!important;
+      background:transparent;
+      color:var(--text);
+      text-align:left!important;
+      font-weight:630!important;
+    }
+
+    .score-high{background:linear-gradient(180deg,rgba(98,215,160,.25),rgba(98,215,160,.14));color:#b8f2d5}
+    .score-mid{background:linear-gradient(180deg,rgba(235,189,102,.23),rgba(235,189,102,.12));color:#f2d99e}
+    .score-low{background:linear-gradient(180deg,rgba(239,127,142,.24),rgba(239,127,142,.12));color:#ffc1c9}
+
+    .research-entry{
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:28px;
+      margin-top:22px;
+      padding:24px 26px;
+      border:1px solid rgba(114,169,255,.22);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 85% 50%,rgba(180,140,255,.13),transparent 35%),
+        linear-gradient(135deg,rgba(114,169,255,.08),rgba(255,255,255,.02));
+    }
+
+    .research-entry-label{
+      display:block;
+      margin-bottom:8px;
+      color:#9fbfff;
+      font-size:10px;
+      font-weight:780;
+      letter-spacing:.14em;
+    }
+
+    .research-entry h3{margin:0;font-size:18px;letter-spacing:-.025em}
+    .research-entry p{max-width:690px;margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+
+    .research-entry-button{
+      flex-shrink:0;
+      display:inline-flex;
+      align-items:center;
+      gap:16px;
+      min-height:50px;
+      padding:0 20px;
+      border:1px solid rgba(140,181,255,.42);
+      border-radius:13px;
+      background:linear-gradient(135deg,rgba(114,169,255,.26),rgba(180,140,255,.19));
+      box-shadow:0 12px 35px rgba(73,112,210,.16),inset 0 1px 0 rgba(255,255,255,.1);
+      color:#f8faff;
+      font-size:13px;
+      font-weight:760;
+      transition:.22s ease;
+    }
+
+    .research-entry-button:hover{
+      transform:translateY(-2px);
+      border-color:rgba(174,200,255,.7);
+      box-shadow:0 18px 45px rgba(73,112,210,.25),inset 0 1px 0 rgba(255,255,255,.14);
+    }
+
+    .entry-arrow{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:27px;
+      height:27px;
+      border-radius:50%;
+      background:rgba(255,255,255,.1);
+    }
+
+    .grid-two{
+      display:grid;
+      grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr);
+      gap:16px;
+    }
+
+    .risk-console{
+      position:relative;
+      overflow:hidden;
+      min-height:470px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:
+        linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px),
+        radial-gradient(circle at 30% 20%,rgba(114,169,255,.09),transparent 25%),
+        radial-gradient(circle at 75% 70%,rgba(180,140,255,.08),transparent 28%),
+        rgba(255,255,255,.012);
+      background-size:42px 42px,42px 42px,auto,auto,auto;
+    }
+
+    .risk-console::before{
+      content:"";
+      position:absolute;
+      inset:-35%;
+      background:conic-gradient(from 0deg,transparent 0 76%,rgba(114,169,255,.07) 82%,transparent 88%);
+      animation:scan 12s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes scan{to{transform:rotate(360deg)}}
+
+    .risk-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:112px;
+      height:112px;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(114,169,255,.24);
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(114,169,255,.2),rgba(114,169,255,.035) 55%,transparent 72%);
+      box-shadow:0 0 80px rgba(114,169,255,.13);
+    }
+
+    .risk-core::before,.risk-core::after{
+      content:"";
+      position:absolute;
+      inset:-28px;
+      border:1px solid rgba(255,255,255,.055);
+      border-radius:50%;
+    }
+
+    .risk-core::after{inset:-66px}
+
+    .risk-core-label{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      color:#d7e3ff;
+      font-size:10px;
+      font-weight:780;
+      letter-spacing:.12em;
+      text-align:center;
+      text-transform:uppercase;
+      line-height:1.4;
+    }
+
+    .risk-signal{
+      position:absolute;
+      z-index:3;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transform:translate(-50%,-50%);
+    }
+
+    .risk-node{
+      position:relative;
+      width:var(--size);
+      height:var(--size);
+      flex:0 0 auto;
+      border-radius:50%;
+      background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.95),var(--signal-color) 34%,rgba(255,255,255,.03) 74%);
+      box-shadow:0 0 18px color-mix(in srgb,var(--signal-color) 60%,transparent),0 0 48px color-mix(in srgb,var(--signal-color) 28%,transparent);
+    }
+
+    .risk-node::before{
+      content:"";
+      position:absolute;
+      inset:-7px;
+      border:1px solid color-mix(in srgb,var(--signal-color) 42%,transparent);
+      border-radius:50%;
+      animation:pulse-ring 2.8s ease-out infinite;
+    }
+
+    @keyframes pulse-ring{
+      0%{transform:scale(.82);opacity:.7}
+      70%,100%{transform:scale(1.25);opacity:0}
+    }
+
+    .risk-copy{
+      min-width:155px;
+      padding:9px 11px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:11px;
+      background:rgba(8,11,16,.78);
+      backdrop-filter:blur(14px);
+      box-shadow:0 12px 34px rgba(0,0,0,.25);
+    }
+
+    .risk-name{display:block;color:#f1f4f9;font-size:11px;font-weight:730;line-height:1.25}
+    .risk-meta{display:flex;gap:7px;margin-top:4px;color:var(--muted);font-size:10px}
+    .risk-dimension{color:var(--signal-color)}
+
+    .risk-summary{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:start;
+      margin-top:14px;
+      padding:14px 15px;
+      border:1px solid rgba(239,127,142,.13);
+      border-radius:13px;
+      background:linear-gradient(135deg,rgba(239,127,142,.07),rgba(114,169,255,.035));
+    }
+
+    .risk-summary-icon{
+      display:grid;
+      place-items:center;
+      width:28px;
+      height:28px;
+      border-radius:9px;
+      background:rgba(239,127,142,.11);
+      color:#ffc2ca;
+      font-size:13px;
+    }
+
+    .risk-summary strong{display:block;margin-bottom:4px;font-size:12px}
+    .risk-summary span{color:var(--muted);font-size:11px;line-height:1.5}
+
+    .divergence-layout{
+      display:grid;
+      gap:18px;
+    }
+
+    .reference-card,.judge-card{
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:16px;
+      background:rgba(255,255,255,.018);
+    }
+
+    .reference-card{
+      border-color:rgba(114,169,255,.24);
+      background:linear-gradient(135deg,rgba(114,169,255,.10),rgba(180,140,255,.05));
+    }
+
+    .judge-label{
+      margin-bottom:8px;
+      color:var(--subtle);
+      font-size:10px;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .judge-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:10px;
+    }
+
+    .judge-name{font-size:13px;font-weight:740}
+    .judge-type{display:block;margin-top:3px;color:var(--muted);font-size:10px}
+    .judge-value{font-size:20px;font-weight:820;letter-spacing:-.04em}
+
+    .judge-track{
+      height:11px;
+      overflow:hidden;
+      border-radius:999px;
+      background:#252b35;
+    }
+
+    .judge-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(114,169,255,.76),rgba(180,140,255,.9));
+      box-shadow:0 0 20px rgba(114,169,255,.23);
+    }
+
+    .judge-fill.llm{
+      background:linear-gradient(90deg,rgba(114,169,255,.45),rgba(180,140,255,.58));
+      box-shadow:none;
+    }
+
+    .judge-branches{
+      position:relative;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      padding-top:26px;
+    }
+
+    .judge-branches::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      height:26px;
+      border-left:1px dashed rgba(114,169,255,.24);
+    }
+
+    .judge-branches::after{
+      content:"LLM-as-Judge baselines";
+      position:absolute;
+      top:5px;
+      left:50%;
+      transform:translateX(-50%);
+      color:var(--subtle);
+      font-size:9px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .gap-badge{
+      display:inline-flex;
+      margin-top:10px;
+      padding:5px 8px;
+      border:1px solid rgba(239,127,142,.15);
+      border-radius:999px;
+      background:rgba(239,127,142,.07);
+      color:#ffbcc5;
+      font-size:10px;
+      font-weight:700;
+    }
+
+    .judge-insight{
+      padding:14px;
+      border:1px solid rgba(114,169,255,.16);
+      border-radius:12px;
+      background:rgba(114,169,255,.07);
+      color:#c8d4eb;
+      font-size:12px;
+      line-height:1.58;
+    }
+
+    @media(max-width:1120px){
+      .hero,.grid-two{grid-template-columns:1fr}
+      .risk-console{min-height:520px}
+    }
+
+    @media(max-width:760px){
+      .site-header{padding:14px 20px}
+      .page{padding:24px 20px 56px}
+      .hero-copy h2{font-size:36px}
+      .research-entry{align-items:flex-start;flex-direction:column}
+      .research-entry-button{width:100%;justify-content:space-between}
+      .risk-console{min-height:680px}
+      .risk-signal{transform:translate(-50%,-50%) scale(.92)}
+      .judge-branches{grid-template-columns:1fr}
+    }
+
+    @media(max-width:520px){
+      .brand{font-size:18px}
+      .header-entry span:first-child{display:none}
+      .hero-copy,.health-card,.panel{border-radius:16px}
+      .hero-copy{padding:28px}
+      .hero-copy h2{font-size:32px}
+      .panel{padding:18px}
+      .risk-console{min-height:760px}
+      .risk-copy{min-width:132px}
+    }
+  
+    .prototype-footer{
+      margin-top:42px;
+      padding:28px 12px 8px;
+      border-top:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      color:var(--subtle);
+    }
+
+    .prototype-footer .title{
+      color:var(--text);
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:8px;
+      letter-spacing:.02em;
+    }
+
+    .prototype-footer .subtitle{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">D</div>
+      <span>deeproject</span>
+    </div>
+
+    <a href="index.html" class="header-entry">
+      <span>Enter Research Space</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </header>
+
+  <main class="page">
+    <div class="eyebrow">Behavior intelligence workspace</div>
+    <h1>Behavior Overview</h1>
+
+    <section class="hero">
+      <article class="hero-copy">
+        <div class="hero-kicker"><span class="pulse"></span>Dataset analysis complete</div>
+        <h2>See where AI behavior begins to drift.</h2>
+        <p>
+          Explore behavioral patterns in multi-turn AI interactions, identify hidden behavioral failures, and compare structured human evaluation with LLM-as-Judge assessments.
+        </p>
+
+        <div class="meta-row">
+          <div class="meta-item"><strong>13</strong><span>scenarios</span></div>
+          <div class="meta-item"><strong>68</strong><span>responses</span></div>
+          <div class="meta-item"><strong>34</strong><span>evaluation pairs</span></div>
+          <div class="meta-item"><strong>1,020</strong><span>human judgments</span></div>
+        </div>
+      </article>
+
+      <article class="health-card">
+        <div class="health-head">
+          <div>
+            <div class="health-title">Behavior Snapshot</div>
+            <div class="health-note">Aggregate quality and hidden risk should be read together.</div>
+          </div>
+          <div class="delta">↑ augmented system</div>
+        </div>
+
+        <div class="snapshot-grid">
+          <div class="snapshot-metric primary">
+            <div class="snapshot-label">Hidden behavioral risks</div>
+            <div class="snapshot-value risk">9<span class="snapshot-unit">types</span></div>
+            <div class="snapshot-detail">Distinct failure types across both evaluated systems</div>
+          </div>
+
+          <div class="snapshot-metric">
+            <div class="snapshot-label">Highest-risk failure</div>
+            <div class="snapshot-value">23.5%</div>
+            <div class="snapshot-detail"><strong>Misleading suggestion</strong> · 19 of 81 assigned failure tags</div>
+          </div>
+
+          <div class="snapshot-metric">
+            <div class="snapshot-label">Overall Behavior Score</div>
+            <div class="snapshot-value">2.71<span class="snapshot-unit">/ 3.0</span></div>
+            <div class="snapshot-detail">Mean score for Model B across 34 responses and 1,224 dimension ratings</div>
+          </div>
+
+          <div class="snapshot-metric">
+            <div class="snapshot-label">Largest judge gap</div>
+            <div class="snapshot-value">55.8<span class="snapshot-unit">pp</span></div>
+            <div class="snapshot-detail">Human preference for Model B vs GPT-4o baseline</div>
+          </div>
+        </div>
+
+        <div class="snapshot-footer">
+          <span class="snapshot-footer-icon">⚠</span>
+          <span>A strong average score does not mean the interaction is behaviorally safe or consistently helpful.</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header map-header">
+        <div>
+          <h2 class="panel-title">Behavior Map</h2>
+          <p class="panel-subtitle">
+            Use Matrix View to compare scenarios, or Behavior Orbit to see whether each turn stays aligned with the user goal.
+          </p>
+        </div>
+
+        <div class="map-controls" role="tablist" aria-label="Behavior Map view">
+          <button class="map-tab active" id="matrixTab" type="button" role="tab" aria-selected="true" aria-controls="matrixView">
+            Matrix View
+          </button>
+          <button class="map-tab" id="patternTab" type="button" role="tab" aria-selected="false" aria-controls="patternView">
+            Pattern View
+          </button>
+        </div>
+      </div>
+
+      <div class="map-view" id="matrixView" role="tabpanel" aria-labelledby="matrixTab">
+        <div class="legend" style="margin-bottom:12px">
+          <div class="legend-item"><span class="dot" style="background:var(--reasoning)"></span>Reasoning</div>
+          <div class="legend-item"><span class="dot" style="background:var(--helpfulness)"></span>Helpfulness</div>
+          <div class="legend-item"><span class="dot" style="background:var(--consistency)"></span>Consistency</div>
+          <div class="legend-item"><span class="dot" style="background:var(--context)"></span>Context</div>
+        </div>
+
+        <div class="behavior-map-wrap">
+          <table class="behavior-map" id="behaviorMap">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Reasoning</th>
+                <th>Helpfulness</th>
+                <th>Consistency</th>
+                <th>Context alignment</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="map-view" id="patternView" role="tabpanel" aria-labelledby="patternTab" hidden>
+        <div class="orbit-toolbar">
+          <div class="orbit-control">
+            <label for="trajectoryScenario">Behavior orbit</label>
+            <select id="trajectoryScenario"></select>
+          </div>
+          <div class="orbit-summary" id="trajectorySummary"></div>
+        </div>
+
+        <div class="orbit-stage" id="orbitStage">
+          <svg class="orbit-svg" id="trajectorySvg" viewBox="0 0 1000 520" role="img" aria-label="Behavior orbit showing all turns around the user goal"></svg>
+          <div class="orbit-detail" id="orbitDetail" aria-live="polite"></div>
+        </div>
+
+        <div class="orbit-note">
+          All turns are shown together. Distance from the center represents behavioral drift; direction shows the dimension contributing most to that drift.
+        </div>
+      </div>
+
+      <div class="research-entry">
+        <div>
+          <span class="research-entry-label">DEEPER INVESTIGATION</span>
+          <h3>Explore the full interaction</h3>
+          <p>
+            Enter the Research Space to review turn-level evidence,
+            annotate behavioral failures, and inspect scenario trajectories.
+          </p>
+        </div>
+
+        <a href="index.html" class="research-entry-button">
+          <span>Enter Research Space</span>
+          <span class="entry-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="grid-two">
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Behavioral Risk Signals</h2>
+            <p class="panel-subtitle">
+              A live-style risk field showing which failures appear most often and where they may affect user trust.
+            </p>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item"><span class="dot" style="background:var(--reasoning)"></span>Reasoning</div>
+            <div class="legend-item"><span class="dot" style="background:var(--helpfulness)"></span>Helpfulness</div>
+            <div class="legend-item"><span class="dot" style="background:var(--consistency)"></span>Consistency</div>
+            <div class="legend-item"><span class="dot" style="background:var(--context)"></span>Context</div>
+          </div>
+        </div>
+
+        <div class="risk-console" id="riskConsole">
+          <div class="risk-core">
+            <div class="risk-core-label">Hidden<br>behavioral<br>risk</div>
+          </div>
+        </div>
+
+        <div class="risk-summary">
+          <div class="risk-summary-icon">⚠</div>
+          <div>
+            <strong>Task success can hide behavioral failure.</strong>
+            <span>
+              The three most frequent categories account for 53 of 81 assigned failure tags, suggesting risks that may remain invisible in completion-only metrics.
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Human–LLM Judge Divergence</h2>
+            <p class="panel-subtitle">
+              Structured human evaluation compared with LLM-as-Judge baselines.
+            </p>
+          </div>
+        </div>
+
+        <div class="divergence-layout">
+          <div class="judge-label">Structured human reference</div>
+
+          <div class="reference-card">
+            <div class="judge-head">
+              <div>
+                <div class="judge-name">Human Review</div>
+                <span class="judge-type">Structured human evaluation</span>
+              </div>
+              <div class="judge-value">67.6%</div>
+            </div>
+            <div class="judge-track">
+              <div class="judge-fill" style="width:67.6%"></div>
+            </div>
+          </div>
+
+          <div class="judge-branches">
+            <div class="judge-card">
+              <div class="judge-head">
+                <div>
+                  <div class="judge-name">Claude Sonnet</div>
+                  <span class="judge-type">LLM-as-Judge baseline</span>
+                </div>
+                <div class="judge-value">26.5%</div>
+              </div>
+              <div class="judge-track">
+                <div class="judge-fill llm" style="width:26.5%"></div>
+              </div>
+              <div class="gap-badge">−41.1 pp vs human</div>
+            </div>
+
+            <div class="judge-card">
+              <div class="judge-head">
+                <div>
+                  <div class="judge-name">GPT-4o</div>
+                  <span class="judge-type">LLM-as-Judge baseline</span>
+                </div>
+                <div class="judge-value">11.8%</div>
+              </div>
+              <div class="judge-track">
+                <div class="judge-fill llm" style="width:11.8%"></div>
+              </div>
+              <div class="gap-badge">−55.8 pp vs human</div>
+            </div>
+          </div>
+
+          <div class="judge-insight">
+            Human annotators preferred Model B in 69 of 102 pairwise judgments (67.6%). The displayed LLM-as-Judge baselines selected the same system less often, with GPT-4o showing the largest gap.
+          </div>
+        </div>
+      </article>
+    </section>
+  
+    <footer class="prototype-footer">
+      <div class="title">Research Prototype</div>
+      <div class="subtitle">Developed at Georgia Institute of Technology</div>
+    </footer>
+
+  </main>
+
+  <script>
+    const scenarios = [
+      { id: "S1", name: "Constrained generation", scores: [2.000, 2.500, 3.000, 3.000], x: 34.2, y: 63.6 },
+      { id: "S2", name: "Generation refinement", scores: [2.000, 3.000, 3.000, 2.500], x: 86.7, y: 85.0 },
+      { id: "S3", name: "Composition", scores: [2.000, 1.833, 3.000, 3.000], x: 10.0, y: 54.5 },
+      { id: "S4", name: "Generation + iteration", scores: [2.500, 2.667, 3.000, 2.833], x: 62.8, y: 51.1 },
+      { id: "S5", name: "Concept + application", scores: [2.333, 2.889, 2.889, 2.778], x: 77.3, y: 48.5 },
+      { id: "S6", name: "Concept clarification", scores: [2.444, 2.667, 3.000, 2.778], x: 65.4, y: 54.9 },
+      { id: "S7", name: "Procedural debugging", scores: [2.222, 2.889, 2.778, 2.667], x: 88.8, y: 42.4 },
+      { id: "S8", name: "Procedural refinement", scores: [2.000, 3.000, 3.000, 2.833], x: 63.8, y: 75.2 },
+      { id: "S9", name: "Debugging", scores: [2.000, 3.000, 3.000, 3.000], x: 52.4, y: 70.3 },
+      { id: "S10", name: "Debugging explanation", scores: [2.222, 2.667, 3.000, 3.000], x: 45.2, y: 57.1 },
+      { id: "S11", name: "Iterative learning", scores: [2.667, 3.000, 3.000, 2.667], x: 90.0, y: 53.9 },
+      { id: "S12", name: "Simplification", scores: [2.556, 2.556, 2.778, 3.000], x: 61.1, y: 15.0 },
+      { id: "S13", name: "Off-task recovery", scores: [2.556, 2.778, 3.000, 3.000], x: 56.6, y: 45.5 }
+    ];
+
+    const scoreClass = (score) =>
+      score >= 2.6 ? "score-high" : score >= 2.2 ? "score-mid" : "score-low";
+
+    const tbody = document.querySelector("#behaviorMap tbody");
+
+    scenarios.forEach((scenario) => {
+      const row = document.createElement("tr");
+
+      row.innerHTML =
+        `<td class="scenario-name">${scenario.id} · ${scenario.name}</td>` +
+        scenario.scores
+          .map((score) => `<td class="${scoreClass(score)}">${score.toFixed(1)}</td>`)
+          .join("");
+
+      tbody.appendChild(row);
+    });
+
+    const matrixTab = document.getElementById("matrixTab");
+    const patternTab = document.getElementById("patternTab");
+    const matrixView = document.getElementById("matrixView");
+    const patternView = document.getElementById("patternView");
+
+    const setMapView = (view) => {
+      const showMatrix = view === "matrix";
+      matrixView.hidden = !showMatrix;
+      patternView.hidden = showMatrix;
+      matrixTab.classList.toggle("active", showMatrix);
+      patternTab.classList.toggle("active", !showMatrix);
+      matrixTab.setAttribute("aria-selected", String(showMatrix));
+      patternTab.setAttribute("aria-selected", String(!showMatrix));
+    };
+
+    matrixTab.addEventListener("click", () => setMapView("matrix"));
+    patternTab.addEventListener("click", () => setMapView("pattern"));
+
+    const trajectoryData = {"S10": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": ["R:vague explanation"], "userInput": "Can you generate two beat patterns using only the symbols 0, +, and -?"}, {"turn": 2, "scores": {"Reasoning": 2.667, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.917, "failureTags": [], "userInput": "Is 12 steps ideal for a beat pattern?"}, {"turn": 3, "scores": {"Reasoning": 2.0, "Helpfulness": 2.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.5, "failureTags": ["R:missing reasoning"], "userInput": "You gave me this loop code, but it doesn’t work because it has a 1 in it:\nfor i in range(1, 5):\n    playBeat(sound, 1, i, beat)"}], "S11": [{"turn": 1, "scores": {"Reasoning": 2.667, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.917, "failureTags": [], "userInput": "I don’t understand what you mean."}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.667}, "overall": 2.667, "failureTags": [], "userInput": "Do you learn when I tell you something is wrong?"}, {"turn": 3, "scores": {"Reasoning": 3.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 3.0, "failureTags": [], "userInput": "What is a beat list?"}, {"turn": 4, "scores": {"Reasoning": 3.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.0}, "overall": 2.75, "failureTags": [], "userInput": "Can you give me some percussion sounds?"}], "S12": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 2.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.5, "failureTags": ["R:vague explanation", "H:misleading suggestion", "H:misleading suggestion"], "userInput": "Can you create some percussion beat patterns?"}, {"turn": 2, "scores": {"Reasoning": 3.0, "Helpfulness": 3.0, "Consistency": 2.667, "Context": 3.0}, "overall": 2.917, "failureTags": [], "userInput": "How can I use a beat list to apply these sounds?"}, {"turn": 3, "scores": {"Reasoning": 2.667, "Helpfulness": 2.667, "Consistency": 2.667, "Context": 3.0}, "overall": 2.75, "failureTags": ["H:no clear steps"], "userInput": "How do I use makeBeat()?"}], "S13": [{"turn": 1, "scores": {"Reasoning": 2.667, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.917, "failureTags": [], "userInput": "Isn’t it makeBeat(sound, track, start, beat)?"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 2.333, "Consistency": 3.0, "Context": 3.0}, "overall": 2.583, "failureTags": [], "userInput": "Can you explain how to use makeBeat more simply?"}, {"turn": 3, "scores": {"Reasoning": 3.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 3.0, "failureTags": [], "userInput": "Can you make a string for me?"}], "S1": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": ["R:vague explanation"], "userInput": "Do you dream?"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 2.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.5, "failureTags": ["R:vague explanation", "R:missing reasoning", "R:missing reasoning"], "userInput": "Forget that. Just give me the 16-step beat string for my code."}], "S2": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": ["R:vague explanation"], "userInput": "Make up 3 beatstrings, each with 16 steps. They should each represent 1 measure."}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.0}, "overall": 2.5, "failureTags": [], "userInput": "Can you randomly generate 3 beatstrings using only 0, +, and -? Make sure they work, and do not place + and - next to each other."}], "S3": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 1.667, "Consistency": 3.0, "Context": 3.0}, "overall": 2.417, "failureTags": ["R:vague explanation", "R:missing reasoning", "H:misleading suggestion"], "userInput": "How do I use makeBeat?"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 2.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.5, "failureTags": ["R:vague explanation"], "userInput": "Can you show me how to combine it with setEffect to create a fade-in?"}], "S4": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": ["R:vague explanation"], "userInput": "Make 3 different beat strings."}, {"turn": 2, "scores": {"Reasoning": 3.0, "Helpfulness": 2.333, "Consistency": 3.0, "Context": 2.667}, "overall": 2.75, "failureTags": [], "userInput": "Make a for loop to loop my beat strings."}], "S5": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 2.667, "Consistency": 3.0, "Context": 3.0}, "overall": 2.667, "failureTags": ["H:no clear steps"], "userInput": "How do I use a list in Python?"}, {"turn": 2, "scores": {"Reasoning": 3.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.667}, "overall": 2.917, "failureTags": [], "userInput": "How do I use fitMedia with this sound list?\nsounds = [sound_a, sound_b, sound_c]"}, {"turn": 3, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 2.667, "Context": 2.667}, "overall": 2.583, "failureTags": [], "userInput": "This doesn't work in my code: fitMedia(sounds, 1, 1, 5). It gives an error."}], "S6": [{"turn": 1, "scores": {"Reasoning": 2.667, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.917, "failureTags": [], "userInput": "What is wrong with this function call: playSound(sounds, 1, 2, 10)?"}, {"turn": 2, "scores": {"Reasoning": 2.667, "Helpfulness": 2.667, "Consistency": 3.0, "Context": 2.667}, "overall": 2.75, "failureTags": ["R:vague explanation"], "userInput": "How do I create lists?"}, {"turn": 3, "scores": {"Reasoning": 2.0, "Helpfulness": 2.333, "Consistency": 3.0, "Context": 2.667}, "overall": 2.5, "failureTags": ["R:vague explanation"], "userInput": "So a list is a variable, right? Why can't I use it like a number to make all my sounds louder?"}], "S7": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.667}, "overall": 2.667, "failureTags": ["R:vague explanation"], "userInput": "Can you give me an example of a loop?"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 2.333, "Context": 2.667}, "overall": 2.5, "failureTags": ["H:misleading suggestion"], "userInput": "How do I make a loop that increments a list of sounds and a list of beats?"}, {"turn": 3, "scores": {"Reasoning": 2.667, "Helpfulness": 2.667, "Consistency": 3.0, "Context": 2.667}, "overall": 2.75, "failureTags": [], "userInput": "It only loops once. Why?"}], "S8": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": [], "userInput": "How do I create a beat?"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 2.667}, "overall": 2.667, "failureTags": ["R:vague explanation"], "userInput": "How can I make my for loop repeat multiple times without stopping after a fixed number of sounds? I want the beat to repeat without manually adding more sounds."}], "S9": [{"turn": 1, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": ["H:misleading suggestion"], "userInput": "What is wrong with this code?\nsounds = [sound_a, sound_b, sound_c, sound_d]\nplayBeat(sounds(3), 2, 0, \"0-0-0-0-0-0-0-0\")"}, {"turn": 2, "scores": {"Reasoning": 2.0, "Helpfulness": 3.0, "Consistency": 3.0, "Context": 3.0}, "overall": 2.75, "failureTags": [], "userInput": "I fixed it to sounds[3], but it still gives an error. Why?"}]};
+    const scenarioNames = {"S1": "Constrained generation", "S2": "Generation refinement", "S3": "Composition", "S4": "Generation + iteration", "S5": "Concept + application", "S6": "Concept clarification", "S7": "Procedural debugging", "S8": "Procedural refinement", "S9": "Debugging", "S10": "Debugging explanation", "S11": "Iterative learning", "S12": "Simplification", "S13": "Off-task recovery"};
+
+    const trajectoryScenario = document.getElementById("trajectoryScenario");
+    const trajectorySummary = document.getElementById("trajectorySummary");
+    const trajectorySvg = document.getElementById("trajectorySvg");
+    const orbitDetail = document.getElementById("orbitDetail");
+
+    Object.keys(trajectoryData)
+      .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)))
+      .forEach((sid) => {
+        const option = document.createElement("option");
+        option.value = sid;
+        option.textContent = `${sid} · ${scenarioNames[sid]}`;
+        trajectoryScenario.appendChild(option);
+      });
+
+    trajectoryScenario.value = "S10";
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const dimensionConfig = {
+      Reasoning: { angle: 225, label: "Reasoning", color: "var(--reasoning)" },
+      Helpfulness: { angle: 315, label: "Helpfulness", color: "var(--helpfulness)" },
+      Consistency: { angle: 45, label: "Consistency", color: "var(--consistency)" },
+      Context: { angle: 135, label: "Context", color: "var(--context)" }
+    };
+
+    const addSvg = (name, attrs = {}, text = "") => {
+      const element = document.createElementNS(svgNS, name);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+      if (text) element.textContent = text;
+      trajectorySvg.appendChild(element);
+      return element;
+    };
+
+    const weakestDimension = (scores) =>
+      Object.entries(scores).sort((a, b) => a[1] - b[1])[0][0];
+
+    const nodeColor = (overall, hasFailure) => {
+      if (hasFailure || overall < 2.45) return "var(--low)";
+      if (overall < 2.72) return "var(--mid)";
+      return "var(--high)";
+    };
+
+    const renderDetail = (turn, primary) => {
+      const tags = turn.failureTags.length
+        ? turn.failureTags.map((tag) => `<span class="orbit-tag">${tag}</span>`).join("")
+        : '<span class="orbit-tag" style="color:var(--muted);border-color:var(--border);background:rgba(255,255,255,.025)">No failure tag</span>';
+
+      orbitDetail.innerHTML = `
+        <div class="orbit-detail-kicker">Selected turn</div>
+        <div class="orbit-detail-title">Turn ${turn.turn}</div>
+        <div class="orbit-detail-score">${turn.overall.toFixed(2)} <span>/ 3.0</span></div>
+        <div class="orbit-detail-row"><span>Primary drift</span><strong>${primary}</strong></div>
+        <div class="orbit-detail-row"><span>Reasoning</span><strong>${turn.scores.Reasoning.toFixed(2)}</strong></div>
+        <div class="orbit-detail-row"><span>Helpfulness</span><strong>${turn.scores.Helpfulness.toFixed(2)}</strong></div>
+        <div class="orbit-detail-row"><span>Consistency</span><strong>${turn.scores.Consistency.toFixed(2)}</strong></div>
+        <div class="orbit-detail-row"><span>Context</span><strong>${turn.scores.Context.toFixed(2)}</strong></div>
+        <div>${tags}</div>
+      `;
+    };
+
+    const renderOrbit = (sid) => {
+      trajectorySvg.innerHTML = "";
+
+      const turns = trajectoryData[sid];
+      const width = 1000;
+      const height = 520;
+      const cx = 490;
+      const cy = 260;
+      const ringRadii = [92, 175, 258];
+
+      const defs = addSvg("defs");
+      defs.innerHTML = `
+        <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="centerGlow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="10" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      `;
+
+      ringRadii.forEach((radius) => {
+        addSvg("circle", { cx, cy, r: radius, class: "orbit-ring" });
+      });
+
+      addSvg("text", { x: cx + 8, y: cy - ringRadii[0] - 8, class: "orbit-ring-label" }, "Aligned");
+      addSvg("text", { x: cx + 8, y: cy - ringRadii[1] - 8, class: "orbit-ring-label" }, "Watch");
+      addSvg("text", { x: cx + 8, y: cy - ringRadii[2] - 8, class: "orbit-ring-label" }, "Drift");
+
+      Object.entries(dimensionConfig).forEach(([key, config]) => {
+        const rad = config.angle * Math.PI / 180;
+        const x2 = cx + Math.cos(rad) * 278;
+        const y2 = cy + Math.sin(rad) * 278;
+        addSvg("line", { x1: cx, y1: cy, x2, y2, class: "orbit-axis" });
+        addSvg("text", {
+          x: cx + Math.cos(rad) * 300,
+          y: cy + Math.sin(rad) * 300 + 3,
+          class: "orbit-axis-label",
+          "text-anchor": Math.cos(rad) > .2 ? "start" : Math.cos(rad) < -.2 ? "end" : "middle"
+        }, config.label);
+      });
+
+      const positions = turns.map((turn, index) => {
+        const primary = weakestDimension(turn.scores);
+        const base = dimensionConfig[primary].angle;
+        const spread = turns.length === 1 ? 0 : (index - (turns.length - 1) / 2) * 10;
+        const angle = (base + spread) * Math.PI / 180;
+
+        // Score 3.0 is close to the user goal. Lower scores move outward.
+        const risk = Math.max(0, Math.min(1, (3 - turn.overall) / 0.65));
+        const radius = 86 + risk * 178;
+        return {
+          turn,
+          primary,
+          x: cx + Math.cos(angle) * radius,
+          y: cy + Math.sin(angle) * radius
+        };
+      });
+
+      if (positions.length > 1) {
+        const d = positions.map((p, index) => `${index === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+        addSvg("path", { d, class: "orbit-path" });
+      }
+
+      addSvg("circle", { cx, cy, r: 53, class: "orbit-center" });
+      addSvg("circle", { cx, cy, r: 10, class: "orbit-center-core" });
+      addSvg("text", { x: cx, y: cy + 26, class: "orbit-center-label" }, "User Goal");
+      addSvg("text", { x: cx, y: cy + 42, class: "orbit-center-sub" }, "Alignment center");
+
+      let selectedHalo = null;
+
+      positions.forEach((position, index) => {
+        const { turn, primary, x, y } = position;
+        const radius = turn.failureTags.length ? 12 : 10;
+        const node = addSvg("circle", {
+          cx: x,
+          cy: y,
+          r: radius,
+          fill: nodeColor(turn.overall, turn.failureTags.length > 0),
+          class: "orbit-node",
+          tabindex: "0",
+          "aria-label": `Turn ${turn.turn}, score ${turn.overall.toFixed(2)}, primary drift ${primary}`
+        });
+
+        addSvg("text", { x, y: y + 3.5, class: "orbit-node-label" }, String(turn.turn));
+
+        const selectNode = () => {
+          if (selectedHalo) selectedHalo.remove();
+          selectedHalo = document.createElementNS(svgNS, "circle");
+          selectedHalo.setAttribute("cx", x);
+          selectedHalo.setAttribute("cy", y);
+          selectedHalo.setAttribute("r", radius + 8);
+          selectedHalo.setAttribute("class", "orbit-selected-halo");
+          trajectorySvg.insertBefore(selectedHalo, node);
+          renderDetail(turn, primary);
+        };
+
+        node.addEventListener("click", selectNode);
+        node.addEventListener("focus", selectNode);
+
+        if (index === positions.length - 1) selectNode();
+      });
+
+      const first = turns[0].overall;
+      const last = turns[turns.length - 1].overall;
+      const delta = last - first;
+      const farthest = positions.reduce((best, current) =>
+        current.turn.overall < best.turn.overall ? current : best
+      );
+
+      trajectorySummary.innerHTML =
+        `<strong>${turns.length} turns shown</strong><br>` +
+        `Goal alignment ${first.toFixed(2)} → ${last.toFixed(2)} ` +
+        `(${delta >= 0 ? "+" : ""}${delta.toFixed(2)}) · ` +
+        `Largest drift: Turn ${farthest.turn.turn}`;
+    };
+
+    trajectoryScenario.addEventListener("change", () => renderOrbit(trajectoryScenario.value));
+    renderOrbit(trajectoryScenario.value);
+
+    const failures = [
+      { label: "Misleading suggestion", dimension: "Helpfulness", rate: 23.5, x: 24, y: 22, color: "var(--helpfulness)" },
+      { label: "Too generic", dimension: "Context", rate: 22.2, x: 70, y: 24, color: "var(--context)" },
+      { label: "Vague explanation", dimension: "Reasoning", rate: 19.8, x: 28, y: 47, color: "var(--reasoning)" },
+      { label: "Wrong diagnosis", dimension: "Helpfulness", rate: 9.9, x: 76, y: 48, color: "var(--helpfulness)" },
+      { label: "Missing reasoning", dimension: "Reasoning", rate: 7.4, x: 35, y: 70, color: "var(--reasoning)" },
+      { label: "No clear steps", dimension: "Helpfulness", rate: 6.2, x: 70, y: 69, color: "var(--helpfulness)" },
+      { label: "Misreads intent", dimension: "Context", rate: 6.2, x: 50, y: 84, color: "var(--context)" },
+      { label: "Inconsistent behavior", dimension: "Consistency", rate: 2.5, x: 18, y: 86, color: "var(--consistency)" },
+      { label: "Ignores context", dimension: "Context", rate: 2.5, x: 82, y: 87, color: "var(--context)" }
+    ];
+
+    const riskConsole = document.getElementById("riskConsole");
+    const minSize = 13;
+    const maxSize = 38;
+    const maxRate = Math.max(...failures.map((item) => item.rate));
+
+    failures.forEach((failure) => {
+      const size = minSize + (failure.rate / maxRate) * (maxSize - minSize);
+      const signal = document.createElement("div");
+
+      signal.className = "risk-signal";
+      signal.style.left = `${failure.x}%`;
+      signal.style.top = `${failure.y}%`;
+      signal.style.setProperty("--size", `${size}px`);
+      signal.style.setProperty("--signal-color", failure.color);
+
+      signal.innerHTML = `
+        <span class="risk-node" aria-hidden="true"></span>
+        <span class="risk-copy">
+          <span class="risk-name">${failure.label}</span>
+          <span class="risk-meta">
+            <span class="risk-dimension">${failure.dimension}</span>
+            <span>${failure.rate}%</span>
+          </span>
+        </span>
+      `;
+
+      riskConsole.appendChild(signal);
+    });
+  </script>
+</body>
+</html>
+
+

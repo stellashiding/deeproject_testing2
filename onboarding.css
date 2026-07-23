@@ -1,0 +1,163 @@
+.profile-chip {
+  max-width: 240px;
+  overflow: hidden;
+  padding: 8px 12px;
+  color: #245b84;
+  background: #edf7ff;
+  border: 1px solid #b8d5ea;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(30, 32, 35, .68);
+  backdrop-filter: blur(12px);
+}
+
+.modal-backdrop.hidden { display: none; }
+
+.onboarding-card {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: calc(100vh - 40px);
+  padding: 28px;
+  overflow-y: auto;
+  overflow: hidden;
+  background: rgba(248, 248, 247, .84);
+  border: 1px solid rgba(255, 255, 255, .74);
+  border-radius: 20px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .28), inset 0 1px rgba(255, 255, 255, .95);
+  backdrop-filter: blur(26px) saturate(120%);
+  -webkit-backdrop-filter: blur(26px) saturate(120%);
+}
+
+.onboarding-card::before { display: none; }
+
+.onboarding-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.onboarding-brand > span:last-child {
+  display: grid;
+  gap: 1px;
+}
+
+.onboarding-brand b,
+.onboarding-brand small { display: block; }
+.onboarding-brand b { font-size: 15px; line-height: 1.2; letter-spacing: -.02em; }
+.onboarding-brand small { color: var(--muted); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+
+.brand-mark.dark {
+  margin: 0;
+  color: #fff;
+  background: #17191c;
+  border-color: #17191c;
+  box-shadow: none;
+}
+
+.onboarding-card h1 {
+  position: relative;
+  margin: 9px 0 8px;
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.onboarding-card > p {
+  position: relative;
+  max-width: 610px;
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.identity-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.identity-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  min-height: 50px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, .68);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .52);
+  backdrop-filter: blur(18px) saturate(130%);
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background .18s ease;
+}
+
+.identity-option:hover {
+  transform: translateY(-2px);
+  border-color: #898989;
+  box-shadow: 0 12px 28px rgba(15, 42, 62, .09);
+}
+
+.identity-option:has(input:checked) {
+  border-color: #17191c;
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 0 0 2px rgba(23, 25, 28, .08), inset 0 1px rgba(255, 255, 255, .9);
+}
+
+.identity-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.identity-radio {
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.identity-option:has(input:checked) .identity-radio {
+  border-color: #17191c;
+  background: #17191c;
+}
+
+.identity-copy { flex: 0 1 auto; min-width: 0; }
+.identity-copy b { display: block; font-size: 13px; line-height: 1.2; white-space: nowrap; }
+
+.onboarding-card .stacked-label { margin-bottom: 14px; }
+.onboarding-card input,
+.onboarding-card select { width: 100%; min-height: 46px; }
+.onboarding-card input:focus,
+.onboarding-card select:focus { border-color: #17191c; box-shadow: 0 0 0 3px rgba(23, 25, 28, .10); }
+.identity-field { padding: 13px; border: 1px solid #d8d8d5; border-radius: 12px; background: #f1f1ef; }
+.form-error { min-height: 20px; margin-top: 4px; color: var(--red); font-size: 10px; }
+.privacy-copy { display: block; margin-top: 12px; color: var(--muted); font-size: 8px; text-align: center; }
+.onboarding-card #startWorkspace { min-height: 46px; background: #17191c; border: 0; box-shadow: 0 10px 22px rgba(0, 0, 0, .14); }
+
+@media (max-width: 640px) {
+  .identity-choice,
+  .onboarding-card .two-fields { grid-template-columns: 1fr; }
+  .onboarding-card { padding: 24px; border-radius: 19px; }
+  .identity-option { min-height: 62px; }
+  .profile-chip { max-width: 120px; }
+}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Deeproject behavioral assurance prototype">
+  <title>deeproject - Behavioral Assurance</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./onboarding.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#scenario" aria-label="Deeproject home">
+        <span class="brand-mark">d</span>
+        <span><b>deeproject</b><small>Behavioral assurance prototype</small></span>
+      </a>
+      <div class="top-actions">
+        <button id="profileButton" class="profile-chip" aria-label="Edit participant profile">Set participant</button>
+        <span id="saveStatus" class="status-pill">Saved locally</span>
+        <button id="exportStudy" class="button secondary">Export study record</button>
+        <button id="resetStudy" class="button ghost">Reset</button>
+      </div>
+    </header>
+
+    <nav class="primary-nav" aria-label="Primary navigation">
+  <button data-route="scenario" class="nav-item active">1. Scenario Lab</button>
+  <button data-route="framework" class="nav-item">2. Framework Builder</button>
+
+  <span id="progressText" class="progress-text">0 of 2 tasks complete</span>
+</nav>
+
+    <main id="viewRoot" tabindex="-1"></main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="onboardingModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+    <section class="onboarding-card">
+      <div class="onboarding-brand"><span class="brand-mark dark">d</span><span><b>deeproject</b><small>Behavioral assurance workspace</small></span></div>
+      <span class="eyebrow">Participant onboarding · encrypted local session</span>
+      <h1 id="onboardingTitle">Set up your participant profile</h1>
+      <p>Choose one identifier for this session. Your annotations and workflow events will remain linked in the exported study record.</p>
+      <div class="identity-choice">
+        <label class="identity-option"><input type="radio" name="identityType" value="participant_id" checked><span class="identity-radio" aria-hidden="true"></span><span class="identity-copy"><b>Participant ID</b></span></label>
+        <label class="identity-option"><input type="radio" name="identityType" value="email"><span class="identity-radio" aria-hidden="true"></span><span class="identity-copy"><b>Email address</b></span></label>
+      </div>
+      <label class="stacked-label identity-field"><span id="identityLabel">Participant ID</span><input id="identityInput" autocomplete="off" placeholder="e.g., P07"></label>
+      <div id="onboardingError" class="form-error" role="alert"></div>
+      <button id="startWorkspace" class="button primary full">Enter workspace</button>
+      <small class="privacy-copy">Use the identifier approved in your study protocol. Do not enter another person's information.</small>
+    </section>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
