@@ -9,12 +9,14 @@ const initialTrajectory = scenarioId => {
 };
 
 export function criterionQualityChecks(criterion) {
+  const name = String(criterion?.name || "").trim();
+  const normalizedAnchors = Object.values(criterion?.anchors || {}).map(value => String(value).trim().toLowerCase());
   const checks = {
-    specificName: String(criterion?.name || "").trim().length >= 5,
+    specificName: name.length >= 5 && !["new domain criterion", "domain-specific criterion"].includes(name.toLowerCase()),
     rhcaMapping: Boolean(FRAMEWORK_TEMPLATES && ["R", "H", "C", "A"].includes(criterion?.relationship)),
     observableDefinition: String(criterion?.definition || "").trim().length >= 40,
     evidenceRule: String(criterion?.evidence || "").trim().length >= 40,
-    distinctAnchors: Object.values(criterion?.anchors || {}).length === 3 && Object.values(criterion.anchors).every(value => String(value).trim().length >= 35),
+    distinctAnchors: normalizedAnchors.length === 3 && normalizedAnchors.every(value => value.length >= 35) && new Set(normalizedAnchors).size === 3,
     failureTags: String(criterion?.tags || "").trim().length >= 3
   };
   return { ...checks, passedCount: Object.values(checks).filter(Boolean).length, totalCount: 6 };
@@ -68,7 +70,7 @@ const initialState = () => {
     ],
     annotations: [{ id: crypto.randomUUID(), annotatorId: "A02", scenarioId, ratings: { R: 2, H: 1, C: 2, A: 2 }, failureTags: ["missing_reasoning"], evidenceTurns: ["U2", "A2"], failureOnset: "A2", recoveryTurn: "A4", status: "submitted", source: "illustrative" }],
     adjudication: { status: "pending", ratings: {}, note: "", updatedAt: null },
-    domainScenario: { domain: "", userAndGoal: "", behavioralRisk: "" },
+    domainScenario: { domain: "", userAndGoal: "", importantConstraint: "", behavioralRisk: "", expectedInteractionLength: "" },
     framework: { id: crypto.randomUUID(), name: "Custom Domain Framework", template: "custom", domain: "User-defined", coreVersion: "RHCA Core v1.2", criteria: [defaultCriterion()], activeCriterionIndex: 0, status: "draft" },
     curatedArtifacts: [],
     completed: { scenario: false, framework: false },
