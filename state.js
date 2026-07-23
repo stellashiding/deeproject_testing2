@@ -2,7 +2,11 @@ import { APP_CONFIG, FRAMEWORK_TEMPLATES, SCENARIOS, TRAJECTORY_PRESETS } from "
 
 const clone = value => structuredClone(value);
 const defaultCriterion = () => ({ name: "Domain-specific criterion", relationship: "A", definition: "", evidence: "", anchors: { 1: "", 2: "", 3: "" }, tags: "" });
-const initialTrajectory = scenarioId => clone(TRAJECTORY_PRESETS[scenarioId] || { turns: {}, prediction: null });
+const initialTrajectory = scenarioId => {
+  const trajectory = clone(TRAJECTORY_PRESETS[scenarioId] || { turns: {}, prediction: null });
+  Object.values(trajectory.turns || {}).forEach(turn => delete turn.human);
+  return trajectory;
+};
 
 export function criterionQualityChecks(criterion) {
   const checks = {
@@ -39,8 +43,9 @@ const initialState = () => {
     selectedTargets: ["A1", "A2", "A3", "A4"],
     activeEvaluationTurn: "A1",
     ratedTurns: [],
+    ratedDimensionsByTurn: {},
     evidenceTurns: [],
-    ratings: { R: 2, H: 2, C: 2, A: 2 },
+    ratings: { R: null, H: null, C: null, A: null },
     selectedTags: [],
     customTags: [],
     failureOnset: "none",
@@ -117,6 +122,7 @@ export function hydrate(saved) {
   state.turnEvaluations = { ...defaults.turnEvaluations, ...(saved.turnEvaluations || {}) };
   state.predictions = { ...defaults.predictions, ...(saved.predictions || {}) };
   state.humanEvaluationLocked = Boolean(saved.humanEvaluationLocked);
+  state.ratedDimensionsByTurn = saved.ratedDimensionsByTurn && typeof saved.ratedDimensionsByTurn === "object" ? saved.ratedDimensionsByTurn : {};
   state.humanSnapshot = saved.humanSnapshot && typeof saved.humanSnapshot === "object" ? saved.humanSnapshot : null;
   state.autoComparisonOpened = Boolean(saved.autoComparisonOpened);
   state.autoComparisonDecision = saved.autoComparisonDecision || null;
@@ -148,7 +154,7 @@ export function studyBundle() {
   return {
     metadata: { product: "Deeproject Behavioral Assurance Prototype", version: APP_CONFIG.version, sessionId: state.studySessionId, participantId: state.participantId, participantProfile: state.participantProfile, startedAt: state.startedAt, exportedAt: new Date().toISOString() },
     taskCompletion: state.completed,
-    interactionReview: { taskType: "fixed_study_scenario", scenarioId: state.currentScenarioId, selectedTargets: state.selectedTargets, ratedTurns: state.ratedTurns, activeEvaluationTurn: state.activeEvaluationTurn, evidenceTurns: state.evidenceTurns, ratingsByTurn: Object.fromEntries(Object.entries(state.turnEvaluations[state.currentScenarioId] || {}).filter(([, value]) => value.human).map(([turn, value]) => [turn, value.human])), coreFailureTags: state.selectedTags, customFailureTags: state.customTags, failureOnset: state.failureOnset, recoveryTurn: state.recoveryTurn, status: state.reviewDecision, note: state.reviewNote },
+    interactionReview: { taskType: "fixed_study_scenario", scenarioId: state.currentScenarioId, selectedTargets: state.selectedTargets, ratedTurns: state.ratedTurns, ratedDimensionsByTurn: state.ratedDimensionsByTurn, activeEvaluationTurn: state.activeEvaluationTurn, evidenceTurns: state.evidenceTurns, ratingsByTurn: Object.fromEntries(Object.entries(state.turnEvaluations[state.currentScenarioId] || {}).filter(([, value]) => value.human).map(([turn, value]) => [turn, value.human])), coreFailureTags: state.selectedTags, customFailureTags: state.customTags, failureOnset: state.failureOnset, recoveryTurn: state.recoveryTurn, status: state.reviewDecision, note: state.reviewNote },
     humanEvaluation: {
       locked: state.humanEvaluationLocked,
       snapshot: state.humanSnapshot
