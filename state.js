@@ -19,8 +19,35 @@ export function criterionQualityChecks(criterion) {
     distinctAnchors: normalizedAnchors.length === 3 && normalizedAnchors.every(value => value.length >= 35) && new Set(normalizedAnchors).size === 3,
     failureTags: String(criterion?.tags || "").trim().length >= 3
   };
-  return { ...checks, passedCount: Object.values(checks).filter(Boolean).length, totalCount: 6 };
+  const coreKeys = ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"];
+  const optionalKeys = ["distinctAnchors", "failureTags"];
+  const corePassedCount = coreKeys.filter(key => checks[key]).length;
+  const optionalPassedCount = optionalKeys.filter(key => checks[key]).length;
+  return {
+    ...checks,
+    corePassedCount,
+    coreTotalCount: coreKeys.length,
+    optionalPassedCount,
+    optionalTotalCount: optionalKeys.length,
+    coreComplete: corePassedCount === coreKeys.length,
+    passedCount: corePassedCount + optionalPassedCount,
+    totalCount: coreKeys.length + optionalKeys.length
+  };
 }
+
+const frameworkQualitySummary = framework => {
+  const criteria = framework.criteria.map(criterion => criterionQualityChecks(criterion));
+  return {
+    minimumCriteriaRequired: 2,
+    criterionCompletionRule: "all_four_core_requirements",
+    requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
+    optionalChecks: ["distinctAnchors", "failureTags"],
+    criteriaCount: criteria.length,
+    coreCompleteCriteriaCount: criteria.filter(quality => quality.coreComplete).length,
+    allCriteriaCoreComplete: criteria.length >= 2 && criteria.every(quality => quality.coreComplete),
+    criteria
+  };
+};
 
 const frameworkArtifact = (framework, domainScenario, scenarioName) => ({
   ...framework,
@@ -188,6 +215,7 @@ export function studyBundle() {
       scenarioId: "participant-defined-domain",
       scenarioName: frameworkScenarioName,
       domainScenario: frameworkDomainScenario,
+      qualitySummary: frameworkQualitySummary(state.framework),
       frameworkArtifact: frameworkArtifact(state.framework, frameworkDomainScenario, frameworkScenarioName)
     },
     curatedArtifacts: state.curatedArtifacts,
