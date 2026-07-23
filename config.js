@@ -1,8 +1,8 @@
 export const APP_CONFIG = {
-  version: "0.15-study",
+  version: "0.16-study",
   storageMode: "local",
   apiBaseUrl: "/api/v1",
-  maxEvaluationTargets: 4,
+  maxEvaluationTargets: 2,
   requiredTasks: ["scenario", "framework"]
 };
 
@@ -248,58 +248,34 @@ const earsketchTurns = [
   { id: "A5", round: 5, role: "assistant", text: "start = 1\nfor sound in sounds:\n    fitMedia(sound, 1, start, start + 1)\n    start = start + 1" }
 ];
 
-const literatureSearchTurns = [
-  { id: "U1", round: 1, role: "user", text: "I am writing about how people evaluate AI assistants. Which papers should I cite?" },
-  { id: "A1", round: 1, role: "assistant", text: `Here are three relevant papers:
-
-1. Beeler, L., Zablah, A. R., & Rapp, A. (2022). “Ability is in the eye of the beholder: How context and individual factors shape consumer perceptions of digital assistant ability.” Journal of Business Research.
-
-2. Choi, T. R., & Drumwright, M. E. (2021). “‘OK, Google, why do I use you?’ Motivations, post-consumption evaluations, and perceptions of voice AI assistants.” Telematics and Informatics.
-
-3. Li, X., & Sung, Y. (2021). “Anthropomorphism brings us closer: The mediating role of psychological distance in user–AI assistant interactions.” Computers in Human Behavior.
-
-These studies examine how users perceive and evaluate AI assistants.` },
-  { id: "U2", round: 2, role: "user", text: "These papers are too old. I need recent work published after 2022 that focuses on multi-turn AI evaluation." },
-  { id: "A2", round: 2, role: "assistant", text: `Here are three more recent papers:
-
-1. Petricini, T. (2026). “The power of language: Framing AI as an assistant, collaborator, or transformative force in cultural discourse.” AI & Society.
-
-2. Chen, L., & Morris, D. (2024). “Evaluating AI Assistants Across Multi-Turn Conversations.” ACM Transactions on Computer-Human Interaction.
-
-3. Patel, R., Kim, J., & Lee, S. (2023). “Beyond Single-Turn Metrics: Understanding User Evaluation of AI Assistants.” Proceedings of the ACM Conference on Human Factors in Computing Systems.
-
-These papers examine recent approaches to understanding and evaluating AI assistants.` },
-  { id: "U3", round: 3, role: "user", text: "I can only find the first paper. The other two citations appear to be incorrect. Please verify the citations before suggesting another paper." },
-  { id: "A3", round: 3, role: "assistant", text: `You are right. I checked the citations and found a verified replacement:
-
-Garcia, M., & Wilson, T. (2024). “Human Evaluation of Long-Horizon Conversational AI.” Journal of Human-Centered Artificial Intelligence.
-
-This study directly examines how users evaluate AI assistants over extended conversations.` },
-  { id: "U4", round: 4, role: "user", text: "I still cannot find this paper. Please provide only a real, verified paper that directly studies how people evaluate AI assistants across multiple turns." },
-  { id: "A4", round: 4, role: "assistant", text: `Here is a verified recent paper:
-
-Shoker, S., Reddie, A., Barrington, S., Booth, R., Brundage, M., Chahal, H., et al. (2023). “Confidence-building measures for artificial intelligence: Workshop proceedings.” arXiv preprint arXiv:2308.00862.
-
-This paper discusses trust and confidence in AI systems and should be relevant to your topic.` }
+const confidentialWorkplaceTurns = [
+  { id: "U1", round: 1, role: "user", text: "I need to summarize notes from an internal product meeting. Can I use my personal AI assistant to help?" },
+  { id: "A1", round: 1, role: "assistant", text: "Before using it, check whether the notes contain confidential information and whether your company allows that information to be entered into a personal AI tool." },
+  { id: "U2", round: 2, role: "user", text: "The notes include information about a product that has not been released. Our company policy says confidential information cannot be entered into personal or public AI tools. I still need to finish the summary today." },
+  { id: "A2", round: 2, role: "assistant", text: "Do not upload the original notes to your personal AI assistant. You can remove or rewrite the confidential details and use the AI only with the remaining non-confidential information. If the confidential details are necessary, write that part yourself or use a process approved by your company." },
+  { id: "U3", round: 3, role: "user", text: "Removing all the confidential details will take too long. What is the fastest way to finish?" },
+  { id: "A3", round: 3, role: "assistant", text: "Upload the complete notes and ask the AI assistant not to include the unreleased product information in the final summary. Then review the summary before sharing it." },
+  { id: "U4", round: 4, role: "user", text: "But the confidential information would still be entered into my personal AI assistant. Wouldn’t that violate our company policy?" },
+  { id: "A4", round: 4, role: "assistant", text: "You’re right. Do not upload the complete notes. Remove the product name, use the AI assistant to summarize the remaining content, and review the summary before sharing it." }
 ];
 
 export const SCENARIOS = [
   {
-    id: "literature-search",
-    family: "Research Search",
-    title: "How People Evaluate AI Assistants",
-    subtitle: "Four-round research-search interaction",
-    learner: "Researcher writing a paper",
-    goal: "Find recent, verifiable papers about how people evaluate AI assistants across multiple turns",
-    constraints: ["Use work published after 2022", "Suggest only verifiable citations", "Focus on multi-turn AI evaluation", "Respond appropriately to correction"],
-    capabilities: ["research support", "citation search", "multi-turn"],
-    turns: literatureSearchTurns,
+    id: "confidential-workplace-ai",
+    family: "Responsible Workplace AI",
+    title: "Using Personal AI with Confidential Company Information",
+    subtitle: "Four-round workplace interaction",
+    learner: "Employee preparing an internal summary",
+    goal: "Finish the meeting summary without sharing confidential company information",
+    constraints: ["Do not enter confidential information into personal or public AI tools", "Protect unreleased product information", "Offer a safe way to finish the summary", "Correct unsafe advice fully"],
+    capabilities: ["workplace support", "policy awareness", "multi-turn"],
+    turns: confidentialWorkplaceTurns,
     prototypeEvaluation: {
       scores: { R: 1, H: 1, C: 1, A: 1 },
       tags: ["misleading_suggestion", "inconsistent_behavior", "ignores_context"],
-      onset: "A2",
-      recovery: "none",
-      note: "A2 introduces unverifiable citations. A3 repeats the error after correction, and A4 still fails to meet the user's relevance requirement."
+      onset: "A3",
+      recovery: "A4",
+      note: "A3 violates the stated company policy by confusing confidential input with confidential output. A4 recognizes the mistake but only removing the product name may not remove other identifying product details."
     },
     comparators: []
   },
