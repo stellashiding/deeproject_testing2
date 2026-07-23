@@ -12,12 +12,12 @@ export function criterionQualityChecks(criterion) {
   const name = String(criterion?.name || "").trim();
   const normalizedAnchors = Object.values(criterion?.anchors || {}).map(value => String(value).trim().toLowerCase());
   const checks = {
-    specificName: name.length >= 5 && !["new domain criterion", "domain-specific criterion"].includes(name.toLowerCase()),
+    specificName: Boolean(name) && !["new domain criterion", "domain-specific criterion"].includes(name.toLowerCase()),
     rhcaMapping: Boolean(FRAMEWORK_TEMPLATES && ["R", "H", "C", "A"].includes(criterion?.relationship)),
-    observableDefinition: String(criterion?.definition || "").trim().length >= 40,
-    evidenceRule: String(criterion?.evidence || "").trim().length >= 40,
-    distinctAnchors: normalizedAnchors.length === 3 && normalizedAnchors.every(value => value.length >= 35) && new Set(normalizedAnchors).size === 3,
-    failureTags: String(criterion?.tags || "").trim().length >= 3
+    observableDefinition: Boolean(String(criterion?.definition || "").trim()),
+    evidenceRule: Boolean(String(criterion?.evidence || "").trim()),
+    distinctAnchors: normalizedAnchors.length === 3 && normalizedAnchors.every(Boolean) && new Set(normalizedAnchors).size === 3,
+    failureTags: Boolean(String(criterion?.tags || "").trim())
   };
   const coreKeys = ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"];
   const optionalKeys = ["distinctAnchors", "failureTags"];
@@ -30,6 +30,8 @@ export function criterionQualityChecks(criterion) {
     optionalPassedCount,
     optionalTotalCount: optionalKeys.length,
     coreComplete: corePassedCount === coreKeys.length,
+    structuralCheckOnly: true,
+    semanticQualityReviewRequired: true,
     passedCount: corePassedCount + optionalPassedCount,
     totalCount: coreKeys.length + optionalKeys.length
   };
@@ -39,12 +41,18 @@ const frameworkQualitySummary = framework => {
   const criteria = framework.criteria.map(criterion => criterionQualityChecks(criterion));
   return {
     minimumCriteriaRequired: 2,
-    criterionCompletionRule: "all_four_core_requirements",
+    criterionCompletionRule: "all_four_core_requirements_plus_anchors_for_at_least_one_criterion",
     requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
-    optionalChecks: ["distinctAnchors", "failureTags"],
+    sharedRequirement: "at_least_one_criterion_with_distinct_anchors",
+    optionalChecks: ["failureTags"],
+    automaticChecksMeasure: "structural_completion_only",
+    semanticQualityReviewRequired: true,
     criteriaCount: criteria.length,
     coreCompleteCriteriaCount: criteria.filter(quality => quality.coreComplete).length,
     allCriteriaCoreComplete: criteria.length >= 2 && criteria.every(quality => quality.coreComplete),
+    criteriaWithDistinctAnchorsCount: criteria.filter(quality => quality.distinctAnchors).length,
+    atLeastOneCriterionHasDistinctAnchors: criteria.some(quality => quality.distinctAnchors),
+    taskStructurallyComplete: criteria.length >= 2 && criteria.every(quality => quality.coreComplete) && criteria.some(quality => quality.distinctAnchors),
     criteria
   };
 };
