@@ -3,15 +3,18 @@ import { getState, mutate, recordEvent, ensureTrajectory } from "./state.js";
 
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
 const scenario = () => SCENARIOS.find(item => item.id === getState().currentScenarioId) || SCENARIOS[0];
+const CORE_DIMENSIONS = ["R", "H", "C", "A"];
+const completedDimensions = (state, turnId) => new Set(state.ratedDimensionsByTurn?.[turnId] || []);
+const isTurnFullyRated = (state, turnId) => CORE_DIMENSIONS.every(key => completedDimensions(state, turnId).has(key));
 
 function writeHumanTrajectory(state) {
   const evaluations = state.turnEvaluations[state.currentScenarioId] || {};
   const frameworkCriteria = state.framework.criteria || [];
   const targets = [state.activeEvaluationTurn || state.selectedTargets[0]].filter(Boolean);
   targets.forEach(turnId => {
-    const existing = evaluations[turnId] || { auto: { ...state.ratings }, llm: { ...state.ratings }, tags: [] };
+    const existing = evaluations[turnId] || { tags: [] };
     const customForTurn = state.customTags.filter(tag => tag.evidenceTurn === turnId).map(tag => tag.label);
-    const domainScores = Object.fromEntries(frameworkCriteria.map(criterion => [criterion.name, state.ratings[criterion.relationship] || 2]));
+    const domainScores = Object.fromEntries(frameworkCriteria.map(criterion => [criterion.name, state.ratings[criterion.relationship] ?? null]));
     let trajectoryState = "at-risk";
     if (turnId === state.failureOnset) trajectoryState = "violated";
     if (turnId === state.recoveryTurn) trajectoryState = "recovered";
@@ -39,12 +42,13 @@ function messageCard(turn) {
 function dimensionEditor(key, dimension) {
   const state = getState();
   const activeTurn = state.activeEvaluationTurn || state.selectedTargets[0];
-  const score = state.turnEvaluations[state.currentScenarioId]?.[activeTurn]?.human?.[key] ?? state.ratings[key];
+  const touched = completedDimensions(state, activeTurn).has(key);
+  const score = touched ? state.turnEvaluations[state.currentScenarioId]?.[activeTurn]?.human?.[key] ?? state.ratings[key] : null;
   return `<fieldset class="dimension-card">
     <legend><b>${key}</b> ${esc(dimension.name)}</legend>
     <p>${esc(dimension.question)}</p>
     <div class="score-options">${[1, 2, 3].map(value => `<label title="${esc(dimension.anchors[value])}"><input type="radio" name="score-${key}" value="${value}" ${score === value ? "checked" : ""} ${state.humanEvaluationLocked ? "disabled" : ""}><span>${value}</span></label>`).join("")}</div>
-    <small>${esc(dimension.anchors[score])}</small>
+    <small>${score ? esc(dimension.anchors[score]) : "Select a rating."}</small>
   </fieldset>`;
 }
 
@@ -63,7 +67,7 @@ function renderEvaluationPanel() {
     ${state.selectedTargets.length ? `<label class="stacked-label">Active turn to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>${id}</option>`).join("")}</select></label>` : ""}
     ${state.selectedTargets.length < 2 ? `<div class="notice warning">Consistency is cross-turn. Select at least two assistant responses for stronger evidence.</div>` : ""}
     <fieldset class="human-evaluation-form" ${state.humanEvaluationLocked ? "disabled" : ""}>
-    <section><div class="section-title"><h3>RHCA core ratings</h3><span>Required</span></div>${Object.entries(RHCA_CORE).map(([key, value]) => dimensionEditor(key, value)).join("")}</section>
+    <section><div class="section-title"><h3>Core evaluation dimensions</h3><span>All four required</span></div>${Object.entries(RHCA_CORE).map(([key, value]) => dimensionEditor(key, value)).join("")}</section>
     <section><div class="section-title"><h3>Core failure tags</h3><span>Paper-derived</span></div><div class="tag-grid">${CORE_FAILURE_TAGS.map(tag => `<label class="tag-check"><input type="checkbox" data-core-tag="${tag.id}" ${state.selectedTags.includes(tag.id) ? "checked" : ""}><span><b>${esc(tag.label)}</b><small>${tag.dimension}</small></span></label>`).join("")}</div></section>
     <section><div class="section-title"><h3>Domain-specific tags</h3><span>Must map to RHCA</span></div><div id="customTagList">${customTags()}</div>
       <div class="mini-form"><input id="customTagName" placeholder="e.g., Oversimplification" aria-label="Custom tag name"><select id="customTagDimension" aria-label="Related RHCA dimension"><option value="">Related dimension</option>${Object.entries(RHCA_CORE).map(([key, d]) => `<option value="${key}">${key} - ${esc(d.name)}</option>`).join("")}</select><select id="customTagEvidence" aria-label="Evidence turn"><option value="">Evidence turn</option>${item.turns.map(t => `<option value="${t.id}">${t.id}</option>`).join("")}</select><button id="addCustomTag" class="button secondary">Add tag</button></div>
@@ -108,7 +112,8 @@ function bindScenarioEvents(root) {
   if (activeTurnSelect) activeTurnSelect.addEventListener("change", event => { mutate(s => {
     s.activeEvaluationTurn = event.target.value;
     const savedRatings = s.turnEvaluations[s.currentScenarioId]?.[s.activeEvaluationTurn]?.human;
-    if (savedRatings) s.ratings = { ...savedRatings };
+    const touched = completedDimensions(s, s.activeEvaluationTurn);
+    s.ratings = Object.fromEntries(CORE_DIMENSIONS.map(key => [key, touched.has(key) ? savedRatings?.[key] ?? null : null]));
   }, "evaluation.active_turn_changed", { turnId: event.target.value }); refresh(); });
 
   root.querySelectorAll("[data-evidence]").forEach(input => input.addEventListener("change", () => { mutate(s => {
@@ -117,7 +122,14 @@ function bindScenarioEvents(root) {
   }, "evaluation.evidence_changed", { turn: input.dataset.evidence, selected: input.checked }); refresh(); }));
 
   root.querySelectorAll("[data-onset]").forEach(button => button.addEventListener("click", () => { mutate(s => { s.failureOnset = button.dataset.onset; }, "evaluation.failure_onset_marked", { turn: button.dataset.onset }); refresh(); }));
-  root.querySelectorAll("[name^='score-']").forEach(input => input.addEventListener("change", () => { mutate(s => { s.ratings[input.name.slice(-1)] = Number(input.value); if (!s.ratedTurns.includes(s.activeEvaluationTurn)) s.ratedTurns.push(s.activeEvaluationTurn); writeHumanTrajectory(s); }, "evaluation.rating_changed", { turn: getState().activeEvaluationTurn, dimension: input.name.slice(-1), score: Number(input.value) }); refresh(); }));
+  root.querySelectorAll("[name^='score-']").forEach(input => input.addEventListener("change", () => { mutate(s => {
+    const dimension = input.name.slice(-1);
+    s.ratings[dimension] = Number(input.value);
+    s.ratedDimensionsByTurn ||= {};
+    s.ratedDimensionsByTurn[s.activeEvaluationTurn] = [...new Set([...(s.ratedDimensionsByTurn[s.activeEvaluationTurn] || []), dimension])];
+    writeHumanTrajectory(s);
+    s.ratedTurns = s.selectedTargets.filter(turnId => isTurnFullyRated(s, turnId));
+  }, "evaluation.rating_changed", { turn: getState().activeEvaluationTurn, dimension: input.name.slice(-1), score: Number(input.value) }); refresh(); }));
   root.querySelectorAll("[data-core-tag]").forEach(input => input.addEventListener("change", () => mutate(s => { const id = input.dataset.coreTag; s.selectedTags = input.checked ? [...s.selectedTags, id] : s.selectedTags.filter(x => x !== id); }, "evaluation.core_tag_changed", { tag: input.dataset.coreTag, selected: input.checked })));
   root.querySelector("#failureOnset").addEventListener("change", e => mutate(s => { s.failureOnset = e.target.value; }, "evaluation.failure_onset_changed"));
   root.querySelector("#recoveryTurn").addEventListener("change", e => mutate(s => { s.recoveryTurn = e.target.value; }, "evaluation.recovery_changed"));
@@ -133,7 +145,8 @@ function bindScenarioEvents(root) {
   const lockHuman = root.querySelector("#lockHumanEvaluation");
   if (lockHuman) lockHuman.addEventListener("click", () => {
     const current = getState();
-    if (current.ratedTurns.length < current.selectedTargets.length) return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Rate R, H, C, or A at least once for each assistant response." }));
+    const incompleteTurns = current.selectedTargets.filter(turnId => !isTurnFullyRated(current, turnId));
+    if (incompleteTurns.length) return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: `Please complete all four evaluation dimensions for ${incompleteTurns.join(", ")}.` }));
     if (!current.evidenceTurns.length) return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Select at least one supporting evidence turn." }));
     mutate(s => {
       writeHumanTrajectory(s);
