@@ -27,7 +27,7 @@ function messageCard(turn) {
   const state = getState();
   const target = state.selectedTargets.includes(turn.id);
   const evidence = state.evidenceTurns.includes(turn.id);
-  const selectable = turn.role === "assistant";
+  const selectable = state.selectedTargets.includes(turn.id);
   return `<article class="message-card ${turn.role} ${target ? "selected-target" : ""}" data-turn="${turn.id}">
     <div class="message-meta"><span>${turn.role === "user" ? "User" : "Assistant"} ${turn.id}</span><span>Round ${turn.round}</span></div>
     <pre>${esc(turn.text)}</pre>
@@ -62,7 +62,7 @@ function renderEvaluationPanel() {
   const state = getState();
   const item = scenario();
   return `<aside class="evaluation-panel">
-    <div class="panel-title"><div><span class="eyebrow">Human-guided evaluation</span><h2>Rate each response</h2></div><span class="count-badge">${state.ratedTurns.length}/${state.selectedTargets.length} rated</span></div>
+    <div class="panel-title"><div><span class="eyebrow">Human-guided evaluation</span><h2>Rate two responses</h2></div><span class="count-badge">${state.ratedTurns.length}/${state.selectedTargets.length} rated</span></div>
     <div class="selection-summary">${state.selectedTargets.map(id => `<span>${id}</span>`).join("")}</div>
     ${state.selectedTargets.length ? `<label class="stacked-label">Active turn to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>${id}</option>`).join("")}</select></label>` : ""}
     ${state.selectedTargets.length < 2 ? `<div class="notice warning">Consistency is cross-turn. Select at least two assistant responses for stronger evidence.</div>` : ""}
@@ -85,7 +85,7 @@ export function renderScenario(root) {
   const state = getState();
   const item = scenario();
   root.innerHTML = `<div class="page scenario-page">
-    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate the literature-search interaction</h1><p>Rate each assistant response, select supporting evidence, and identify failure onset and recovery.</p></div><span class="status-pill">Fixed study scenario</span></header>
+    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate A3 and A4. Select supporting evidence and identify failure onset and recovery.</p></div><span class="status-pill">Fixed study scenario</span></header>
     <div class="context-strip"><div><span>Case family</span><b>${esc(item.family)}</b></div><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div><div>
   <span>Mode</span>
   <b>${Math.max(...item.turns.map(turn => turn.round))} rounds - guided</b>
