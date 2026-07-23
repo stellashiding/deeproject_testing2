@@ -43,14 +43,22 @@ export function exportFramework() {
   const { framework, domainScenario } = getState();
   const scenarioName = domainScenario.domain.trim() || "Participant-defined domain";
   const exportedDomainScenario = { ...domainScenario, scenarioId: "participant-defined-domain", scenarioName };
-  const criteriaWithChecks = framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion) }));
+  const criteriaWithChecks = framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion, exportedDomainScenario) }));
   const qualitySummary = {
     minimumCriteriaRequired: 2,
     criterionCompletionRule: "all_four_core_requirements_plus_anchors_for_at_least_one_criterion",
     requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
     sharedRequirement: "at_least_one_criterion_with_distinct_anchors",
     optionalChecks: ["failureTags"],
-    automaticChecksMeasure: "structural_completion_only",
+    automaticChecksMeasure: "structural_completion_plus_advisory_lightweight_text_quality",
+    lightweightQualityCheckIsAdvisory: true,
+    lightweightQualityRules: {
+      specificName: "specific_behavior_based_name",
+      observableDefinition: "visible_assistant_action",
+      evidenceRule: "interaction_evidence_target",
+      ratingAnchors: "weak_to_partial_to_strong_progression",
+      scenarioAlignment: "overlap_with_goal_constraint_or_risk"
+    },
     semanticQualityReviewRequired: true,
     criteriaCount: criteriaWithChecks.length,
     coreCompleteCriteriaCount: criteriaWithChecks.filter(criterion => criterion.qualityChecks.coreComplete).length,
