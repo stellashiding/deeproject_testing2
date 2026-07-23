@@ -40,8 +40,8 @@ const initialState = () => {
     startedAt: new Date().toISOString(),
     currentScenarioId: scenarioId,
     revealedRound: 4,
-    selectedTargets: ["A1", "A2", "A3", "A4"],
-    activeEvaluationTurn: "A1",
+    selectedTargets: ["A3", "A4"],
+    activeEvaluationTurn: "A3",
     ratedTurns: [],
     ratedDimensionsByTurn: {},
     evidenceTurns: [],
@@ -59,7 +59,7 @@ const initialState = () => {
     autoComparisonDecision: null,
     autoComparisonNote: "",
     autoComparisonReviewedAt: null,
-    selectedTrajectoryTurn: "A2",
+    selectedTrajectoryTurn: "A3",
     turnEvaluations: { [scenarioId]: trajectory.turns },
     predictions: { [scenarioId]: trajectory.prediction },
     annotationTeam: [
@@ -113,6 +113,26 @@ export function hydrate(saved) {
   if (!saved || typeof saved !== "object") return;
   const defaults = initialState();
   state = { ...defaults, ...saved, events: saved.events || [] };
+  const scenarioChanged = !SCENARIOS.some(item => item.id === state.currentScenarioId);
+  if (scenarioChanged) {
+    state.currentScenarioId = defaults.currentScenarioId;
+    state.selectedTargets = defaults.selectedTargets;
+    state.activeEvaluationTurn = defaults.activeEvaluationTurn;
+    state.ratedTurns = [];
+    state.ratedDimensionsByTurn = {};
+    state.evidenceTurns = [];
+    state.ratings = defaults.ratings;
+    state.selectedTags = [];
+    state.customTags = [];
+    state.failureOnset = "none";
+    state.recoveryTurn = "none";
+    state.reviewNote = "";
+    state.reviewDecision = "pending";
+    state.humanEvaluationLocked = false;
+    state.humanSnapshot = null;
+    state.selectedTrajectoryTurn = defaults.selectedTrajectoryTurn;
+    state.completed = { ...defaults.completed, ...(saved.completed || {}), scenario: false };
+  }
   if (["governance", "integrations"].includes(state.route)) state.route = "review";
   if (state.participantId === "anonymous") state.participantId = "";
   state.participantProfile = { ...defaults.participantProfile, ...(saved.participantProfile || {}) };
