@@ -382,3 +382,28 @@
   min-width: 140px;
   min-height: 44px;
 }
+
+
+.export-reminder-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.export-reminder-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  text-decoration: none;
+}
+
+@media (max-width: 440px) {
+  .export-reminder-actions {
+    flex-direction: column-reverse;
+  }
+
+  .export-reminder-actions .button {
+    width: 100%;
+  }
+}
