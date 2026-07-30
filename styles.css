@@ -2046,3 +2046,9 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+
+.speaker-avatar.assistant {
+  font-size: 13px;
+  font-family: system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
