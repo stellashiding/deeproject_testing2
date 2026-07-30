@@ -336,3 +336,49 @@
     flex: 1;
   }
 }
+
+
+.export-reminder-card {
+  width: min(440px, 100%);
+  padding: 30px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #d7e4ee;
+  border-radius: 20px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .24);
+}
+
+.export-reminder-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 14px;
+  color: #fff;
+  background: #4b91cc;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.export-reminder-card h2 {
+  margin: 8px 0;
+  color: var(--ink);
+  font-size: 24px;
+  letter-spacing: -.03em;
+}
+
+.export-reminder-card p {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.export-reminder-card strong {
+  color: var(--ink);
+}
+
+.export-reminder-card .button {
+  min-width: 140px;
+  min-height: 44px;
+}
