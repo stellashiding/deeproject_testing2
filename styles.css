@@ -2023,3 +2023,26 @@ textarea:focus-visible {
     border-left: 0;
   }
 }
+
+
+/* Full-width two-column Scenario Lab */
+.scenario-page {
+  width: 100%;
+  max-width: none;
+}
+
+.scenario-page .scenario-layout {
+  grid-template-columns: minmax(0, 1fr) 410px;
+  width: 100%;
+  gap: 16px;
+}
+
+.scenario-page .conversation-panel {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .scenario-page .scenario-layout {
+    grid-template-columns: 1fr;
+  }
+}
