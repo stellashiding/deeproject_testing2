@@ -2,7 +2,7 @@ import { INTEGRATION_PREVIEW, RHCA_CORE, SCENARIOS } from "./config.js";
 import { getState, mutate, reset, setState, subscribe, studyBundle } from "./state.js";
 import { clearLocal, createStudySession, exportFramework, exportStudyBundle, exportTrajectory, loadLocal, saveLocal, saveParticipantProfile, syncEvent, syncFramework, syncScenarioReview } from "./services.js";
 import { renderScenario } from "./scenario.js?v=20260730-1905";
-import { renderFramework } from "./framework.js?v=20260730-1738";
+import { renderFramework } from "./framework.js?v=20260730-2000";
 import { renderLongHorizon } from "./long-horizon.js";
 import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 
@@ -71,7 +71,7 @@ function openExportReminder() {
 
 function closeExportReminder() {
   document.querySelector("#exportReminderModal").classList.add("hidden");
-  document.querySelector("#exportStudy").focus();
+  (document.querySelector("#exportStudyFramework") || document.querySelector("#resetStudy")).focus();
 }
 
 function updateIdentityForm(type) {
@@ -160,7 +160,7 @@ document.querySelectorAll("[data-route]").forEach(button => button.addEventListe
   location.hash = button.dataset.route;
   renderRoute();
 }));
-document.querySelector("#exportStudy").addEventListener("click", () => {
+window.addEventListener("deeproject:export-study", () => {
   exportStudyBundle();
   openExportReminder();
 });
