@@ -1782,3 +1782,164 @@ textarea:focus-visible {
 .scenario-detail-fields label { display: grid; gap: 8px; font-weight: 700; }
 .scenario-detail-fields textarea { min-height: 76px; }
 @media (max-width: 980px) { .three-fields, .scenario-detail-fields { grid-template-columns: 1fr; } }
+
+
+/* Scenario Lab progressive disclosure */
+.scenario-page .context-strip {
+  grid-template-columns: 1fr 1fr 1.4fr;
+}
+
+.context-disclosure {
+  padding: 0;
+  overflow: hidden;
+}
+
+.context-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 14px;
+  color: #29587e;
+  background: #fff;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  list-style: none;
+  cursor: pointer;
+}
+
+.context-disclosure > summary::-webkit-details-marker,
+.evaluation-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.context-disclosure > summary::after,
+.evaluation-disclosure > summary::after {
+  content: "⌄";
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.context-disclosure[open] > summary::after,
+.evaluation-disclosure[open] > summary::after {
+  content: "⌃";
+}
+
+.context-hide-label {
+  display: none;
+}
+
+.context-disclosure[open] .context-view-label {
+  display: none;
+}
+
+.context-disclosure[open] .context-hide-label {
+  display: inline;
+}
+
+.context-disclosure-body {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.context-disclosure-body > .eyebrow {
+  display: block;
+  margin-top: 14px;
+}
+
+.evaluation-disclosure {
+  border-top: 1px solid var(--line);
+}
+
+.evaluation-disclosure > summary {
+  display: flex;
+  align-items: center;
+  padding: 13px 0;
+  list-style: none;
+  cursor: pointer;
+}
+
+.evaluation-disclosure > summary > span:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.evaluation-disclosure > summary b {
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.evaluation-disclosure > summary small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.evaluation-disclosure .disclosure-action {
+  margin-left: auto;
+  color: #2563a6;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.evaluation-disclosure[open] .disclosure-action {
+  font-size: 0;
+}
+
+.evaluation-disclosure[open] .disclosure-action::before {
+  content: "Hide tags";
+  font-size: 9px;
+}
+
+.disclosure-body {
+  padding: 0 0 13px;
+}
+
+.tags-locked {
+  margin-top: 0;
+  padding: 13px 0;
+}
+
+.tags-locked > div {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  color: #557086;
+  background: #f4f8fb;
+  border: 1px dashed #c5d8e6;
+  border-radius: 9px;
+}
+
+.tags-locked b {
+  font-size: 10px;
+}
+
+.tags-locked span {
+  font-size: 9px;
+}
+
+@media (max-width: 1100px) {
+  .scenario-layout {
+    grid-template-columns: 180px minmax(420px, 1fr) 360px;
+  }
+}
+
+@media (max-width: 900px) {
+  .scenario-page .context-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .evaluation-panel {
+    position: static;
+    max-height: none;
+  }
+}
