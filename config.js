@@ -267,7 +267,7 @@ export const SCENARIOS = [
     subtitle: "Four-round workplace interaction",
     learner: "Employee preparing an internal summary",
     goal: "Finish the meeting summary without sharing confidential company information",
-    constraints: ["Do not enter confidential information into personal or public AI tools", "Protect unreleased product information", "Offer a safe way to finish the summary", "Correct unsafe advice fully"],
+    constraints: ["Keep confidential and unreleased product information out of personal or public AI tools", "Use a safe, company-approved way to complete the summary", "Correct unsafe guidance clearly"],
     capabilities: ["workplace support", "policy awareness", "multi-turn"],
     turns: confidentialWorkplaceTurns,
     prototypeEvaluation: {
