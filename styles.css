@@ -2052,3 +2052,46 @@ textarea:focus-visible {
   font-size: 13px;
   font-family: system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
 }
+
+
+/* Framework Builder domain scenario form hierarchy */
+.scenario-meta-fields,
+.scenario-description-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.scenario-meta-fields label,
+.scenario-description-fields label,
+.scenario-constraint-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.scenario-description-fields,
+.scenario-constraint-field {
+  margin-top: 16px;
+}
+
+.scenario-meta-fields input,
+.scenario-meta-fields select {
+  width: 100%;
+  min-height: 44px;
+}
+
+.scenario-description-fields textarea,
+.scenario-constraint-field textarea {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+}
+
+@media (max-width: 760px) {
+  .scenario-meta-fields,
+  .scenario-description-fields {
+    grid-template-columns: 1fr;
+  }
+}
