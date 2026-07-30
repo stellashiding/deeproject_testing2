@@ -106,19 +106,19 @@ export function renderScenario(root) {
           <div class="flow-rounds">
             <article class="flow-round">
               <span class="flow-round-label">Round 1</span>
-              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Asks whether a personal AI assistant can help</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">AI</i><span><b>AI Assistant</b><small>Recommends checking company policy and confidentiality</small></span></span></div>
+              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Asks whether a personal AI assistant can help</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Recommends checking company policy and confidentiality</small></span></span></div>
             </article>
             <article class="flow-round">
               <span class="flow-round-label">Round 2</span>
-              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Explains the confidentiality policy and deadline</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">AI</i><span><b>AI Assistant</b><small>Recommends removing confidential information</small></span></span></div>
+              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Explains the confidentiality policy and deadline</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Recommends removing confidential information</small></span></span></div>
             </article>
             <article class="flow-round target-round">
               <span class="flow-round-label">Round 3 <em>Rate AI response</em></span>
-              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Asks for the fastest way to finish</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">AI</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
+              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Asks for the fastest way to finish</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
             </article>
             <article class="flow-round target-round">
               <span class="flow-round-label">Round 4 <em>Rate AI response</em></span>
-              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Questions whether the advice violates company policy</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">AI</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
+              <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Questions whether the advice violates company policy</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
             </article>
           </div>
           <p class="overview-instruction">Read the complete conversation below before rating the two selected AI responses.</p>
