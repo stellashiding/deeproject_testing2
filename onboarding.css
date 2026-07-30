@@ -320,6 +320,28 @@
   visibility: hidden;
 }
 
+.nav-item[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.activity-transition-card {
+  width: min(540px, 100%);
+  text-align: left;
+}
+
+.activity-transition-card .export-reminder-icon {
+  margin-left: 0;
+}
+
+.activity-transition-card .tour-checklist {
+  margin: 18px 0 22px;
+}
+
+.activity-transition-card > .button {
+  width: 100%;
+}
+
 @media (max-width: 520px) {
   .tour-interaction {
     align-items: stretch;
