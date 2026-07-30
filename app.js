@@ -51,6 +51,18 @@ function updateChrome() {
   document.querySelector("#profileButton").textContent = getState().participantId || "Set participant";
 }
 
+function openExportReminder() {
+  const state = getState();
+  if (!state.completed.scenario || !state.completed.framework) return;
+  document.querySelector("#exportReminderModal").classList.remove("hidden");
+  setTimeout(() => document.querySelector("#closeExportReminder").focus(), 20);
+}
+
+function closeExportReminder() {
+  document.querySelector("#exportReminderModal").classList.add("hidden");
+  document.querySelector("#exportStudy").focus();
+}
+
 function updateIdentityForm(type) {
   const label = document.querySelector("#identityLabel");
   const input = document.querySelector("#identityInput");
@@ -134,7 +146,11 @@ document.querySelectorAll("[data-route]").forEach(button => button.addEventListe
   location.hash = button.dataset.route;
   renderRoute();
 }));
-document.querySelector("#exportStudy").addEventListener("click", exportStudyBundle);
+document.querySelector("#exportStudy").addEventListener("click", () => {
+  exportStudyBundle();
+  openExportReminder();
+});
+document.querySelector("#closeExportReminder").addEventListener("click", closeExportReminder);
 document.querySelector("#profileButton").addEventListener("click", openOnboarding);
 document.querySelectorAll('[name="identityType"]').forEach(radio => radio.addEventListener("change", () => {
   document.querySelector("#identityInput").value = "";
