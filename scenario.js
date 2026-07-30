@@ -34,7 +34,6 @@ function messageCard(turn) {
     <div class="message-actions">
       ${selectable ? `<span class="fixed-target">Evaluate this response</span>` : ""}
       <label><input type="checkbox" data-evidence="${turn.id}" ${evidence ? "checked" : ""} ${state.humanEvaluationLocked ? "disabled" : ""}> Use as evidence</label>
-      ${selectable ? `<button class="text-button" data-onset="${turn.id}" ${state.humanEvaluationLocked ? "disabled" : ""}>Mark failure onset</button>` : ""}
     </div>
   </article>`;
 }
@@ -73,7 +72,6 @@ function renderEvaluationPanel() {
     <details class="evaluation-disclosure"><summary><span><b>Domain-specific tags</b><small>Must map to RHCA</small></span><span class="disclosure-action">View tags</span></summary><div class="disclosure-body"><div id="customTagList">${customTags()}</div>
       <div class="mini-form"><input id="customTagName" placeholder="e.g., Oversimplification" aria-label="Custom tag name"><select id="customTagDimension" aria-label="Related RHCA dimension"><option value="">Related dimension</option>${Object.entries(RHCA_CORE).map(([key, d]) => `<option value="${key}">${key} - ${esc(d.name)}</option>`).join("")}</select><select id="customTagEvidence" aria-label="Evidence turn"><option value="">Evidence turn</option>${item.turns.map(t => `<option value="${t.id}">${t.id}</option>`).join("")}</select><button id="addCustomTag" class="button secondary">Add tag</button></div>
     </div></details>` : `<section class="tags-locked" aria-disabled="true"><div><b>Failure tags</b><span>Complete all four RHCA ratings for ${esc(activeTurn || "the active response")} to unlock.</span></div></section>`}
-    <section><div class="section-title"><h3>Failure timeline</h3><span>Long-horizon</span></div><div class="field-row"><label>Failure onset<select id="failureOnset"><option value="none">No failure</option>${item.turns.filter(t => t.role === "assistant").map(t => `<option value="${t.id}" ${state.failureOnset === t.id ? "selected" : ""}>${t.id}</option>`).join("")}</select></label><label>Recovery<select id="recoveryTurn"><option value="none">No recovery</option><option value="partial" ${state.recoveryTurn === "partial" ? "selected" : ""}>Partial</option>${item.turns.filter(t => t.role === "assistant").map(t => `<option value="${t.id}" ${state.recoveryTurn === t.id ? "selected" : ""}>${t.id}</option>`).join("")}</select></label></div></section>
     <section><label class="stacked-label">Review note<textarea id="reviewNote" placeholder="Explain the behavioral failure and cite evidence turns.">${esc(state.reviewNote)}</textarea></label></section>
     </fieldset>
     ${state.humanEvaluationLocked
@@ -86,7 +84,7 @@ export function renderScenario(root) {
   const state = getState();
   const item = scenario();
   root.innerHTML = `<div class="page scenario-page">
-    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate the AI Assistant responses in Rounds 3 and 4. Select supporting evidence and identify failure onset and recovery.</p></div></header>
+    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate the AI Assistant responses in Rounds 3 and 4. Select supporting evidence and add failure tags where relevant.</p></div></header>
     <div class="context-strip"><div><span>Case family</span><b>${esc(item.family)}</b></div><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div></div>
     <div class="scenario-layout">
       <details class="context-panel context-disclosure"><summary><span class="context-view-label">View context</span><span class="context-hide-label">Hide context</span></summary><div class="context-disclosure-body"><span class="eyebrow">Active context</span><h2>Long-horizon constraints</h2>${item.constraints.map(c => `<div class="constraint">✓ ${esc(c)}</div>`).join("")}<h3>Trace capabilities</h3><div class="chip-row">${item.capabilities.map(c => `<span class="chip">${esc(c)}</span>`).join("")}</div>${item.retrieval ? `<h3>Retrieved curriculum</h3>${item.retrieval.map(r => `<div class="retrieval-item">${esc(r)}</div>`).join("")}` : ""}<div class="notice"><b>Evaluation target</b> is the assistant response being rated. <b>Evidence turns</b> can include user or assistant messages.</div></div></details>
@@ -119,7 +117,6 @@ function bindScenarioEvents(root) {
     s.evidenceTurns = input.checked ? [...new Set([...s.evidenceTurns, id])] : s.evidenceTurns.filter(x => x !== id);
   }, "evaluation.evidence_changed", { turn: input.dataset.evidence, selected: input.checked }); refresh(); }));
 
-  root.querySelectorAll("[data-onset]").forEach(button => button.addEventListener("click", () => { mutate(s => { s.failureOnset = button.dataset.onset; }, "evaluation.failure_onset_marked", { turn: button.dataset.onset }); refresh(); }));
   root.querySelectorAll("[name^='score-']").forEach(input => input.addEventListener("change", () => { mutate(s => {
     const dimension = input.name.slice(-1);
     s.ratings[dimension] = Number(input.value);
@@ -129,8 +126,6 @@ function bindScenarioEvents(root) {
     s.ratedTurns = s.selectedTargets.filter(turnId => isTurnFullyRated(s, turnId));
   }, "evaluation.rating_changed", { turn: getState().activeEvaluationTurn, dimension: input.name.slice(-1), score: Number(input.value) }); refresh(); }));
   root.querySelectorAll("[data-core-tag]").forEach(input => input.addEventListener("change", () => mutate(s => { const id = input.dataset.coreTag; s.selectedTags = input.checked ? [...s.selectedTags, id] : s.selectedTags.filter(x => x !== id); }, "evaluation.core_tag_changed", { tag: input.dataset.coreTag, selected: input.checked })));
-  root.querySelector("#failureOnset").addEventListener("change", e => mutate(s => { s.failureOnset = e.target.value; }, "evaluation.failure_onset_changed"));
-  root.querySelector("#recoveryTurn").addEventListener("change", e => mutate(s => { s.recoveryTurn = e.target.value; }, "evaluation.recovery_changed"));
   root.querySelector("#reviewNote").addEventListener("input", e => mutate(s => { s.reviewNote = e.target.value; }, "evaluation.note_edited", { length: e.target.value.length }));
   const addCustomTag = root.querySelector("#addCustomTag");
   if (addCustomTag) addCustomTag.addEventListener("click", () => {
