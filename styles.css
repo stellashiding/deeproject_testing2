@@ -2012,9 +2012,10 @@ textarea:focus-visible {
 }
 
 .speaker-avatar.assistant {
-  color: #ffffff;
-  background: #4b91cc;
-  border-color: #4b91cc;
+  color: #4f4a86;
+  background: linear-gradient(145deg, #eef6ff, #f3efff);
+  border-color: #b9cbe2;
+  box-shadow: 0 2px 8px rgba(72, 111, 157, .10);
 }
 
 .message-meta .speaker-label {
@@ -2343,9 +2344,10 @@ textarea:focus-visible {
 }
 
 .flow-actor.assistant i {
-  border-color: #7166b6;
-  color: #fff;
-  background: linear-gradient(145deg, #438fc5, #765eb7);
+  border-color: #b9b4e2;
+  color: #4f4a86;
+  background: linear-gradient(145deg, #eef6ff, #f3efff);
+  box-shadow: 0 3px 10px rgba(91, 93, 164, .10);
 }
 
 .flow-actor span {
