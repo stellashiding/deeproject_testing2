@@ -64,9 +64,8 @@ function renderEvaluationPanel() {
   const activeTurn = state.activeEvaluationTurn || state.selectedTargets[0];
   const ratingsComplete = Boolean(activeTurn) && isTurnFullyRated(state, activeTurn);
   return `<aside class="evaluation-panel">
-    <div class="panel-title"><div><span class="eyebrow">Human-guided evaluation</span><h2>Rate two responses</h2></div><span class="count-badge">${state.ratedTurns.length}/${state.selectedTargets.length} rated</span></div>
-    <div class="selection-summary">${state.selectedTargets.map(id => `<span>${id}</span>`).join("")}</div>
-    ${state.selectedTargets.length ? `<label class="stacked-label">Active turn to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>${id}</option>`).join("")}</select></label>` : ""}
+    <div class="panel-title"><div><span class="eyebrow">Human-guided evaluation</span><h2>Rate two AI responses</h2></div><span class="count-badge">${state.ratedTurns.length}/${state.selectedTargets.length} rated</span></div>
+    ${state.selectedTargets.length ? `<label class="stacked-label">AI response to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => { const turn = item.turns.find(candidate => candidate.id === id); return `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>AI Assistant · Round ${turn?.round ?? id}</option>`; }).join("")}</select></label>` : ""}
     ${state.selectedTargets.length < 2 ? `<div class="notice warning">Consistency is cross-turn. Select at least two assistant responses for stronger evidence.</div>` : ""}
     <fieldset class="human-evaluation-form" ${state.humanEvaluationLocked ? "disabled" : ""}>
     <section><div class="section-title"><h3>Core evaluation dimensions</h3><span>All four required</span></div>${Object.entries(RHCA_CORE).map(([key, value]) => dimensionEditor(key, value)).join("")}</section>
@@ -87,7 +86,7 @@ export function renderScenario(root) {
   const state = getState();
   const item = scenario();
   root.innerHTML = `<div class="page scenario-page">
-    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate A3 and A4. Select supporting evidence and identify failure onset and recovery.</p></div></header>
+    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate the AI Assistant responses in Rounds 3 and 4. Select supporting evidence and identify failure onset and recovery.</p></div></header>
     <div class="context-strip"><div><span>Case family</span><b>${esc(item.family)}</b></div><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div></div>
     <div class="scenario-layout">
       <details class="context-panel context-disclosure"><summary><span class="context-view-label">View context</span><span class="context-hide-label">Hide context</span></summary><div class="context-disclosure-body"><span class="eyebrow">Active context</span><h2>Long-horizon constraints</h2>${item.constraints.map(c => `<div class="constraint">✓ ${esc(c)}</div>`).join("")}<h3>Trace capabilities</h3><div class="chip-row">${item.capabilities.map(c => `<span class="chip">${esc(c)}</span>`).join("")}</div>${item.retrieval ? `<h3>Retrieved curriculum</h3>${item.retrieval.map(r => `<div class="retrieval-item">${esc(r)}</div>`).join("")}` : ""}<div class="notice"><b>Evaluation target</b> is the assistant response being rated. <b>Evidence turns</b> can include user or assistant messages.</div></div></details>
