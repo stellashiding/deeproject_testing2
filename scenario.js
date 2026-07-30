@@ -53,7 +53,7 @@ function dimensionEditor(key, dimension) {
 
 function customTags() {
   const tags = getState().customTags;
-  if (!tags.length) return `<p class="empty-copy">No domain-specific tags added yet.</p>`;
+  if (!tags.length) return `<p class="empty-copy">No custom tags added yet.</p>`;
   return tags.map((tag, index) => `<div class="custom-tag"><span><b>${esc(tag.label)}</b><small>${esc(tag.dimension)} - ${esc(RHCA_CORE[tag.dimension].name)} - evidence ${esc(tag.evidenceTurn)}</small></span><button data-remove-tag="${index}" class="icon-button" aria-label="Remove ${esc(tag.label)}">×</button></div>`).join("");
 }
 
@@ -69,8 +69,8 @@ function renderEvaluationPanel() {
     <fieldset class="human-evaluation-form" ${state.humanEvaluationLocked ? "disabled" : ""}>
     <section><div class="section-title"><h3>Core evaluation dimensions</h3><span>All four required</span></div>${Object.entries(RHCA_CORE).map(([key, value]) => dimensionEditor(key, value)).join("")}</section>
     ${ratingsComplete ? `<details class="evaluation-disclosure"><summary><span><b>Core failure tags</b><small>Paper-derived</small></span><span class="disclosure-action">View tags</span></summary><div class="disclosure-body"><div class="tag-grid">${CORE_FAILURE_TAGS.map(tag => `<label class="tag-check"><input type="checkbox" data-core-tag="${tag.id}" ${state.selectedTags.includes(tag.id) ? "checked" : ""}><span><b>${esc(tag.label)}</b><small>${tag.dimension}</small></span></label>`).join("")}</div></div></details>
-    <details class="evaluation-disclosure"><summary><span><b>Domain-specific tags</b><small>Must map to RHCA</small></span><span class="disclosure-action">View tags</span></summary><div class="disclosure-body"><div id="customTagList">${customTags()}</div>
-      <div class="mini-form"><input id="customTagName" placeholder="e.g., Oversimplification" aria-label="Custom tag name"><select id="customTagDimension" aria-label="Related RHCA dimension"><option value="">Related dimension</option>${Object.entries(RHCA_CORE).map(([key, d]) => `<option value="${key}">${key} - ${esc(d.name)}</option>`).join("")}</select><select id="customTagEvidence" aria-label="Evidence turn"><option value="">Evidence turn</option>${item.turns.map(t => `<option value="${t.id}">${t.id}</option>`).join("")}</select><button id="addCustomTag" class="button secondary">Add tag</button></div>
+    <details class="evaluation-disclosure"><summary><span><b>Custom tags</b><small>Add a tag not listed above</small></span><span class="disclosure-action">View tags</span></summary><div class="disclosure-body"><div id="customTagList">${customTags()}</div>
+      <div class="mini-form"><input id="customTagName" placeholder="e.g., Oversimplification" aria-label="Custom tag name"><select id="customTagDimension" aria-label="Related RHCA dimension"><option value="">Related dimension</option>${Object.entries(RHCA_CORE).map(([key, d]) => `<option value="${key}">${key} - ${esc(d.name)}</option>`).join("")}</select><select id="customTagEvidence" aria-label="Evidence turn"><option value="">Evidence turn</option>${item.turns.map(t => `<option value="${t.id}">${t.id}</option>`).join("")}</select><button id="addCustomTag" class="button secondary">Add custom tag</button></div>
     </div></details>` : `<section class="tags-locked" aria-disabled="true"><div><b>Failure tags</b><span>Complete all four RHCA ratings for ${esc(activeTurn || "the active response")} to unlock.</span></div></section>`}
     <section><label class="stacked-label">Review note<textarea id="reviewNote" placeholder="Explain the behavioral failure and cite evidence turns.">${esc(state.reviewNote)}</textarea></label></section>
     </fieldset>
