@@ -1,8 +1,8 @@
 import { INTEGRATION_PREVIEW, RHCA_CORE, SCENARIOS } from "./config.js";
 import { getState, mutate, reset, setState, subscribe, studyBundle } from "./state.js";
 import { clearLocal, createStudySession, exportFramework, exportStudyBundle, exportTrajectory, loadLocal, saveLocal, saveParticipantProfile, syncEvent, syncFramework, syncScenarioReview } from "./services.js";
-import { renderScenario } from "./scenario.js";
-import { renderFramework } from "./framework.js";
+import { renderScenario } from "./scenario.js?v=20260729-2228";
+import { renderFramework } from "./framework.js?v=20260729-2228";
 import { renderLongHorizon } from "./long-horizon.js";
 import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 
