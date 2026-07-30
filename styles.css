@@ -1943,3 +1943,83 @@ textarea:focus-visible {
     max-height: none;
   }
 }
+
+
+/* Human–AI conversation identity cues */
+.interaction-visual {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  color: #52718b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+.interaction-actor,
+.speaker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.interaction-arrow {
+  color: #8aa6bb;
+  font-size: 12px;
+}
+
+.interaction-rounds {
+  margin-left: 4px;
+  padding-left: 9px;
+  border-left: 1px solid #d4e5f3;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.speaker-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #b9d2e6;
+  border-radius: 50%;
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.speaker-avatar.user {
+  color: #315f7e;
+  background: #edf5f8;
+}
+
+.speaker-avatar.assistant {
+  color: #ffffff;
+  background: #4b91cc;
+  border-color: #4b91cc;
+}
+
+.message-meta .speaker-label {
+  color: #385d78;
+  font-size: 9px;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+
+.message-meta .speaker-label + span {
+  letter-spacing: .05em;
+}
+
+@media (max-width: 600px) {
+  .interaction-visual {
+    flex-wrap: wrap;
+  }
+
+  .interaction-rounds {
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
