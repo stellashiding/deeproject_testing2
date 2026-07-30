@@ -172,6 +172,7 @@ const initialState = () => {
     framework: { id: crypto.randomUUID(), name: "Custom Domain Framework", template: "custom", domain: "User-defined", coreVersion: "RHCA Core v1.2", criteria: [defaultCriterion()], activeCriterionIndex: 0, status: "draft" },
     curatedArtifacts: [],
     completed: { scenario: false, framework: false },
+    activity2OnboardingSeen: false,
     events: []
   };
 };
@@ -242,6 +243,7 @@ export function hydrate(saved) {
   state.turnEvaluations = { ...defaults.turnEvaluations, ...(saved.turnEvaluations || {}) };
   state.predictions = { ...defaults.predictions, ...(saved.predictions || {}) };
   state.humanEvaluationLocked = Boolean(saved.humanEvaluationLocked);
+  state.activity2OnboardingSeen = Boolean(saved.activity2OnboardingSeen);
   state.ratedDimensionsByTurn = saved.ratedDimensionsByTurn && typeof saved.ratedDimensionsByTurn === "object" ? saved.ratedDimensionsByTurn : {};
   state.humanSnapshot = saved.humanSnapshot && typeof saved.humanSnapshot === "object" ? saved.humanSnapshot : null;
   state.autoComparisonOpened = Boolean(saved.autoComparisonOpened);
