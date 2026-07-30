@@ -8,6 +8,7 @@ import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 
 const root = document.querySelector("#viewRoot");
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
+let tourPage = 0;
 
 function renderReview() {
   const s = getState();
@@ -59,10 +60,31 @@ function updateIdentityForm(type) {
   input.placeholder = type === "email" ? "name@example.com" : "e.g., P07";
 }
 
+function showProfileStep() {
+  const modal = document.querySelector("#onboardingModal");
+  modal.querySelector("#profileSetupStep").classList.remove("hidden");
+  modal.querySelector("#productTourStep").classList.add("hidden");
+  modal.setAttribute("aria-labelledby", "onboardingTitle");
+}
+
+function showTourPage(index) {
+  const modal = document.querySelector("#onboardingModal");
+  tourPage = Math.max(0, Math.min(2, index));
+  modal.querySelector("#profileSetupStep").classList.add("hidden");
+  modal.querySelector("#productTourStep").classList.remove("hidden");
+  modal.querySelectorAll("[data-tour-page]").forEach(page => page.classList.toggle("hidden", Number(page.dataset.tourPage) !== tourPage));
+  modal.querySelector("#tourProgress").textContent = `${tourPage + 1} of 3`;
+  modal.querySelectorAll(".tour-dots i").forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === tourPage));
+  modal.querySelector("#tourBack").disabled = tourPage === 0;
+  modal.querySelector("#tourNext").textContent = tourPage === 2 ? "Start Activity 1" : "Next";
+  modal.setAttribute("aria-labelledby", `tourTitle${tourPage}`);
+}
+
 function openOnboarding() {
   const state = getState();
   const modal = document.querySelector("#onboardingModal");
   modal.classList.remove("hidden");
+  showProfileStep();
   const type = state.participantProfile?.identityType === "email" ? "email" : "participant_id";
   const radio = modal.querySelector(`[name="identityType"][value="${type}"]`);
   if (radio) radio.checked = true;
@@ -73,6 +95,7 @@ function openOnboarding() {
 
 async function submitOnboarding() {
   const modal = document.querySelector("#onboardingModal");
+  const isFirstSetup = !getState().participantId;
   const type = modal.querySelector('[name="identityType"]:checked').value;
   const identity = modal.querySelector("#identityInput").value.trim();
   const error = modal.querySelector("#onboardingError");
@@ -92,9 +115,13 @@ async function submitOnboarding() {
   }, "participant.profile_saved", { identityType: type });
   await saveParticipantProfile();
   await createStudySession();
-  modal.classList.add("hidden");
   updateChrome();
-  window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: `Workspace linked to ${participantId}.` }));
+  if (isFirstSetup) {
+    showTourPage(0);
+  } else {
+    modal.classList.add("hidden");
+    window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: `Workspace linked to ${participantId}.` }));
+  }
 }
 
 subscribe(() => {
@@ -116,6 +143,15 @@ document.querySelectorAll('[name="identityType"]').forEach(radio => radio.addEve
 }));
 document.querySelector("#startWorkspace").addEventListener("click", submitOnboarding);
 document.querySelector("#identityInput").addEventListener("keydown", event => { if (event.key === "Enter") submitOnboarding(); });
+document.querySelector("#tourBack").addEventListener("click", () => showTourPage(tourPage - 1));
+document.querySelector("#tourNext").addEventListener("click", () => {
+  if (tourPage < 2) return showTourPage(tourPage + 1);
+  document.querySelector("#onboardingModal").classList.add("hidden");
+  setState({ route: "scenario" }, "onboarding.completed");
+  location.hash = "scenario";
+  renderRoute();
+  root.focus({ preventScroll: true });
+});
 document.querySelector("#resetStudy").addEventListener("click", () => {
   if (!confirm("Reset the prototype and remove the locally saved draft?")) return;
   clearLocal();
