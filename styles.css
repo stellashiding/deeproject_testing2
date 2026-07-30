@@ -2095,3 +2095,19 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+
+.criteria-sidebar-header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.criteria-sidebar-header h2 {
+  margin: 0;
+}
+
+.criteria-sidebar-header .button {
+  width: 100%;
+  padding: 8px 10px;
+}
