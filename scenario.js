@@ -62,9 +62,17 @@ function renderEvaluationPanel() {
   const item = scenario();
   const activeTurn = state.activeEvaluationTurn || state.selectedTargets[0];
   const ratingsComplete = Boolean(activeTurn) && isTurnFullyRated(state, activeTurn);
+  const firstTarget = state.selectedTargets[0];
+  const nextTarget = state.selectedTargets.find(turnId => turnId !== firstTarget);
+  const showNextResponseHint = !state.humanEvaluationLocked
+    && activeTurn === firstTarget
+    && isTurnFullyRated(state, firstTarget)
+    && Boolean(nextTarget)
+    && !isTurnFullyRated(state, nextTarget);
   return `<aside class="evaluation-panel">
     <div class="panel-title"><div><span class="eyebrow">Human-guided evaluation</span><h2>Rate two AI responses</h2></div><span class="count-badge">${state.ratedTurns.length}/${state.selectedTargets.length} rated</span></div>
-    ${state.selectedTargets.length ? `<label class="stacked-label">AI response to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => { const turn = item.turns.find(candidate => candidate.id === id); return `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>AI Assistant · Round ${turn?.round ?? id}</option>`; }).join("")}</select></label>` : ""}
+    ${state.selectedTargets.length ? `<label class="stacked-label">Select an AI response to ${state.humanEvaluationLocked ? "inspect" : "rate"}<select id="activeEvaluationTurn">${state.selectedTargets.map(id => { const turn = item.turns.find(candidate => candidate.id === id); const status = isTurnFullyRated(state, id) ? "Rated ✓" : "Not rated"; return `<option value="${id}" ${state.activeEvaluationTurn === id ? "selected" : ""}>AI Assistant · Round ${turn?.round ?? id} — ${status}</option>`; }).join("")}</select></label>` : ""}
+    ${showNextResponseHint ? `<div class="next-response-hint"><span><b>Round ${item.turns.find(turn => turn.id === firstTarget)?.round ?? firstTarget} complete.</b> Next, rate Round ${item.turns.find(turn => turn.id === nextTarget)?.round ?? nextTarget}.</span><button id="rateNextResponse" class="button secondary" data-next-turn="${nextTarget}">Rate Round ${item.turns.find(turn => turn.id === nextTarget)?.round ?? nextTarget} →</button></div>` : ""}
     ${state.selectedTargets.length < 2 ? `<div class="notice warning">Consistency is cross-turn. Select at least two assistant responses for stronger evidence.</div>` : ""}
     <fieldset class="human-evaluation-form" ${state.humanEvaluationLocked ? "disabled" : ""}>
     <section><div class="section-title"><h3>Core evaluation dimensions</h3><span>All four required</span></div>${Object.entries(RHCA_CORE).map(([key, value]) => dimensionEditor(key, value)).join("")}</section>
@@ -110,6 +118,18 @@ function bindScenarioEvents(root) {
     const touched = completedDimensions(s, s.activeEvaluationTurn);
     s.ratings = Object.fromEntries(CORE_DIMENSIONS.map(key => [key, touched.has(key) ? savedRatings?.[key] ?? null : null]));
   }, "evaluation.active_turn_changed", { turnId: event.target.value }); refresh(); });
+  const rateNextResponse = root.querySelector("#rateNextResponse");
+  if (rateNextResponse) rateNextResponse.addEventListener("click", event => {
+    const turnId = event.currentTarget.dataset.nextTurn;
+    mutate(s => {
+      s.activeEvaluationTurn = turnId;
+      const savedRatings = s.turnEvaluations[s.currentScenarioId]?.[turnId]?.human;
+      const touched = completedDimensions(s, turnId);
+      s.ratings = Object.fromEntries(CORE_DIMENSIONS.map(key => [key, touched.has(key) ? savedRatings?.[key] ?? null : null]));
+    }, "evaluation.active_turn_changed", { turnId });
+    refresh();
+    root.querySelector("#activeEvaluationTurn")?.focus({ preventScroll: true });
+  });
 
   root.querySelectorAll("[data-evidence]").forEach(input => input.addEventListener("change", () => { mutate(s => {
     const id = input.dataset.evidence;
