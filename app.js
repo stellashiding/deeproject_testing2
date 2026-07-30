@@ -37,7 +37,9 @@ function renderReview() {
 }
 
 function renderRoute() {
-  const route = getState().route;
+  const state = getState();
+  const route = state.route === "framework" && !state.completed.scenario ? "scenario" : state.route;
+  if (route !== state.route) setState({ route }, "navigation.blocked");
   document.querySelectorAll("[data-route]").forEach(button => button.classList.toggle("active", button.dataset.route === route));
   if (route === "framework") renderFramework(root);
   else renderScenario(root);
@@ -45,9 +47,19 @@ function renderRoute() {
 }
 
 function updateChrome() {
-  const complete = Object.values(getState().completed).filter(Boolean).length;
+  const state = getState();
+  const complete = Object.values(state.completed).filter(Boolean).length;
   document.querySelector("#progressText").textContent = `${complete} of 2 tasks complete`;
-  document.querySelector("#profileButton").textContent = getState().participantId || "Set participant";
+  document.querySelector("#profileButton").textContent = state.participantId || "Set participant";
+  const frameworkNav = document.querySelector('[data-route="framework"]');
+  frameworkNav.setAttribute("aria-disabled", String(!state.completed.scenario));
+  frameworkNav.title = state.completed.scenario ? "" : "Complete Activity 1 to unlock";
+}
+
+function openActivity2Onboarding() {
+  const modal = document.querySelector("#activity2Modal");
+  modal.classList.remove("hidden");
+  setTimeout(() => document.querySelector("#startActivity2").focus(), 20);
 }
 
 function openExportReminder() {
@@ -80,14 +92,14 @@ function showProfileStep() {
 
 function showTourPage(index) {
   const modal = document.querySelector("#onboardingModal");
-  tourPage = Math.max(0, Math.min(2, index));
+  tourPage = Math.max(0, Math.min(1, index));
   modal.querySelector("#profileSetupStep").classList.add("hidden");
   modal.querySelector("#productTourStep").classList.remove("hidden");
   modal.querySelectorAll("[data-tour-page]").forEach(page => page.classList.toggle("hidden", Number(page.dataset.tourPage) !== tourPage));
-  modal.querySelector("#tourProgress").textContent = `${tourPage + 1} of 3`;
+  modal.querySelector("#tourProgress").textContent = `${tourPage + 1} of 2`;
   modal.querySelectorAll(".tour-dots i").forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === tourPage));
   modal.querySelector("#tourBack").disabled = tourPage === 0;
-  modal.querySelector("#tourNext").textContent = tourPage === 2 ? "Start Activity 1" : "Next";
+  modal.querySelector("#tourNext").textContent = tourPage === 1 ? "Start Activity 1" : "Next";
   modal.setAttribute("aria-labelledby", `tourTitle${tourPage}`);
 }
 
@@ -141,6 +153,9 @@ subscribe(() => {
 });
 
 document.querySelectorAll("[data-route]").forEach(button => button.addEventListener("click", () => {
+  if (button.dataset.route === "framework" && !getState().completed.scenario) {
+    return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Complete Activity 1 to unlock Framework Builder." }));
+  }
   setState({ route: button.dataset.route }, "navigation.changed");
   location.hash = button.dataset.route;
   renderRoute();
@@ -160,12 +175,18 @@ document.querySelector("#startWorkspace").addEventListener("click", submitOnboar
 document.querySelector("#identityInput").addEventListener("keydown", event => { if (event.key === "Enter") submitOnboarding(); });
 document.querySelector("#tourBack").addEventListener("click", () => showTourPage(tourPage - 1));
 document.querySelector("#tourNext").addEventListener("click", () => {
-  if (tourPage < 2) return showTourPage(tourPage + 1);
+  if (tourPage < 1) return showTourPage(tourPage + 1);
   document.querySelector("#onboardingModal").classList.add("hidden");
   setState({ route: "scenario" }, "onboarding.completed");
   location.hash = "scenario";
   renderRoute();
   root.focus({ preventScroll: true });
+});
+document.querySelector("#startActivity2").addEventListener("click", () => {
+  document.querySelector("#activity2Modal").classList.add("hidden");
+  setState({ route: "framework", activity2OnboardingSeen: true }, "onboarding.activity2_started");
+  location.hash = "framework";
+  renderRoute();
 });
 document.querySelector("#resetStudy").addEventListener("click", () => {
   if (!confirm("Reset the prototype and remove the locally saved draft?")) return;
@@ -183,11 +204,22 @@ window.addEventListener("deeproject:event", event => {
   const latest = getState().events.at(-1);
   if (latest) syncEvent(latest);
   if (event.detail.type === "task.framework_completed") syncFramework();
-  if (event.detail.type === "task.scenario_completed") syncScenarioReview();
+  if (event.detail.type === "task.scenario_completed") {
+    syncScenarioReview();
+    const toast = document.querySelector("#toast");
+    toast.classList.remove("show");
+    toast.textContent = "";
+    openActivity2Onboarding();
+  }
 });
 window.addEventListener("hashchange", () => {
   const route = location.hash.slice(1);
   if (["scenario", "framework"].includes(route)) {
+    if (route === "framework" && !getState().completed.scenario) {
+      location.hash = "scenario";
+      window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Complete Activity 1 to unlock Framework Builder." }));
+      return;
+    }
     setState({ route }, "navigation.hash_changed");
     renderRoute();
   }
@@ -196,7 +228,9 @@ window.addEventListener("hashchange", () => {
 loadLocal();
 if (getState().participantId) createStudySession();
 const initialRoute = location.hash.slice(1);
-if (["scenario", "framework"].includes(initialRoute)) mutate(s => { s.route = initialRoute; }, null);
+if (["scenario", "framework"].includes(initialRoute)) mutate(s => {
+  s.route = initialRoute === "framework" && !s.completed.scenario ? "scenario" : initialRoute;
+}, null);
 updateChrome();
 renderRoute();
 if (!getState().participantId) openOnboarding();
