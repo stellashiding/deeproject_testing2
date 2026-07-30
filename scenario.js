@@ -29,7 +29,7 @@ function messageCard(turn) {
   const evidence = state.evidenceTurns.includes(turn.id);
   const selectable = state.selectedTargets.includes(turn.id);
   return `<article class="message-card ${turn.role} ${target ? "selected-target" : ""}" data-turn="${turn.id}">
-    <div class="message-meta"><span>${turn.role === "user" ? "User" : "Assistant"} ${turn.id}</span><span>Round ${turn.round}</span></div>
+    <div class="message-meta"><span class="speaker-label"><span class="speaker-avatar ${turn.role}" aria-hidden="true">${turn.role === "user" ? "U" : "AI"}</span><span>${turn.role === "user" ? "User" : "AI Assistant"}</span></span><span>Round ${turn.round}</span></div>
     <pre>${esc(turn.text)}</pre>
     <div class="message-actions">
       ${selectable ? `<span class="fixed-target">Evaluate this response</span>` : ""}
@@ -91,7 +91,7 @@ export function renderScenario(root) {
     <div class="context-strip"><div><span>Case family</span><b>${esc(item.family)}</b></div><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div></div>
     <div class="scenario-layout">
       <details class="context-panel context-disclosure"><summary><span class="context-view-label">View context</span><span class="context-hide-label">Hide context</span></summary><div class="context-disclosure-body"><span class="eyebrow">Active context</span><h2>Long-horizon constraints</h2>${item.constraints.map(c => `<div class="constraint">✓ ${esc(c)}</div>`).join("")}<h3>Trace capabilities</h3><div class="chip-row">${item.capabilities.map(c => `<span class="chip">${esc(c)}</span>`).join("")}</div>${item.retrieval ? `<h3>Retrieved curriculum</h3>${item.retrieval.map(r => `<div class="retrieval-item">${esc(r)}</div>`).join("")}` : ""}<div class="notice"><b>Evaluation target</b> is the assistant response being rated. <b>Evidence turns</b> can include user or assistant messages.</div></div></details>
-      <section class="conversation-panel"><div class="conversation-head"><div><span class="eyebrow">${esc(item.subtitle)}</span><h2>${esc(item.title)}</h2></div><div class="legend"><span class="dot target"></span>Target <span class="dot evidence"></span>Evidence</div></div>${item.turns.filter(t => t.round <= state.revealedRound).map(messageCard).join("")}</section>
+      <section class="conversation-panel"><div class="conversation-head"><div><div class="interaction-visual" aria-label="Interaction between a user and an AI assistant"><span class="interaction-actor"><span class="speaker-avatar user" aria-hidden="true">U</span>User</span><span class="interaction-arrow" aria-hidden="true">↔</span><span class="interaction-actor"><span class="speaker-avatar assistant" aria-hidden="true">AI</span>AI Assistant</span><span class="interaction-rounds">${Math.max(...item.turns.map(turn => turn.round))} rounds</span></div><h2>${esc(item.title)}</h2></div><div class="legend"><span class="dot target"></span>Target <span class="dot evidence"></span>Evidence</div></div>${item.turns.filter(t => t.round <= state.revealedRound).map(messageCard).join("")}</section>
       ${renderEvaluationPanel()}
     </div>
   </div>`;
