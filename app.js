@@ -47,7 +47,6 @@ function renderRoute() {
 function updateChrome() {
   const complete = Object.values(getState().completed).filter(Boolean).length;
   document.querySelector("#progressText").textContent = `${complete} of 2 tasks complete`;
-  document.querySelector("#saveStatus").textContent = "Saved locally";
   document.querySelector("#profileButton").textContent = getState().participantId || "Set participant";
 }
 
@@ -186,7 +185,6 @@ window.addEventListener("deeproject:event", event => {
   if (event.detail.type === "task.framework_completed") syncFramework();
   if (event.detail.type === "task.scenario_completed") syncScenarioReview();
 });
-window.addEventListener("deeproject:saved", () => { document.querySelector("#saveStatus").textContent = "Saved locally"; });
 window.addEventListener("hashchange", () => {
   const route = location.hash.slice(1);
   if (["scenario", "framework"].includes(route)) {
