@@ -129,6 +129,23 @@ border-color:#41544c}
 .button.full{
 width:100%;
 margin-top:12px}
+.next-response-hint{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin:10px 0 14px;
+padding:11px 12px;
+border:1px solid #b9d8f1;
+border-radius:10px;
+background:#eef7ff;
+color:#245b84}
+.next-response-hint span{
+font-size:11px}
+.next-response-hint span b{
+display:block}
+.next-response-hint .button{
+flex:none}
 .page{
 padding:24px;
 max-width:1680px;
