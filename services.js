@@ -57,7 +57,7 @@ export function exportFramework() {
       observableDefinition: "visible_assistant_action",
       evidenceRule: "interaction_evidence_target",
       ratingAnchors: "weak_to_partial_to_strong_progression",
-      scenarioAlignment: "overlap_with_goal_constraint_or_risk"
+      scenarioAlignment: "overlap_with_goal_or_risk"
     },
     semanticQualityReviewRequired: true,
     criteriaCount: criteriaWithChecks.length,

@@ -34,7 +34,7 @@ export function criterionQualityChecks(criterion, domainScenario = {}) {
     /\b(clear|complete|fully|correct|consistent|specific|all|directly|appropriate|strong)\b/i
   ];
   const stopWords = new Set(["the","a","an","and","or","to","of","in","on","for","with","is","are","be","as","at","by","it","this","that","from","what","how","should","ai","assistant","user"]);
-  const scenarioText = [domainScenario.userAndGoal, domainScenario.importantConstraint, domainScenario.behavioralRisk].filter(Boolean).join(" ");
+  const scenarioText = [domainScenario.userAndGoal, domainScenario.behavioralRisk].filter(Boolean).join(" ");
   const criterionText = [name, definition, evidence, ...anchors].join(" ");
   const scenarioTerms = new Set(words(scenarioText).filter(word => word.length > 3 && !stopWords.has(word)));
   const sharedScenarioTerms = [...new Set(words(criterionText).filter(word => scenarioTerms.has(word)))];
@@ -107,7 +107,7 @@ const frameworkQualitySummary = (framework, domainScenario) => {
       observableDefinition: "visible_assistant_action",
       evidenceRule: "interaction_evidence_target",
       ratingAnchors: "weak_to_partial_to_strong_progression",
-      scenarioAlignment: "overlap_with_goal_constraint_or_risk"
+      scenarioAlignment: "overlap_with_goal_or_risk"
     },
     semanticQualityReviewRequired: true,
     criteriaCount: criteria.length,
