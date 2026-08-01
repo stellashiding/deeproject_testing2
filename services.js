@@ -46,8 +46,8 @@ export function exportFramework() {
   const criteriaWithChecks = framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion, exportedDomainScenario) }));
   const qualitySummary = {
     minimumCriteriaRequired: 1,
-    criterionCompletionRule: "all_four_core_requirements_plus_anchors_for_at_least_one_criterion",
-    requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
+    criterionCompletionRule: "all_three_core_requirements_plus_anchors_for_at_least_one_criterion",
+    requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition"],
     sharedRequirement: "at_least_one_criterion_with_distinct_anchors",
     optionalChecks: ["failureTags"],
     automaticChecksMeasure: "structural_completion_plus_advisory_lightweight_text_quality",
@@ -55,7 +55,6 @@ export function exportFramework() {
     lightweightQualityRules: {
       specificName: "specific_behavior_based_name",
       observableDefinition: "visible_assistant_action",
-      evidenceRule: "interaction_evidence_target",
       ratingAnchors: "weak_to_partial_to_strong_progression",
       scenarioAlignment: "overlap_with_goal_or_risk"
     },
