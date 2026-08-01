@@ -428,6 +428,8 @@ font-size:9px}
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px}
+.two-fields{
+align-items:start}
 .field-row label,.stacked-label,.framework-editor label{
 display:grid;
 gap:5px;
