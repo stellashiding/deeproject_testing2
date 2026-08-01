@@ -45,7 +45,7 @@ export function exportFramework() {
   const exportedDomainScenario = { ...domainScenario, scenarioId: "participant-defined-domain", scenarioName };
   const criteriaWithChecks = framework.criteria.map(criterion => ({ ...criterion, qualityChecks: criterionQualityChecks(criterion, exportedDomainScenario) }));
   const qualitySummary = {
-    minimumCriteriaRequired: 2,
+    minimumCriteriaRequired: 1,
     criterionCompletionRule: "all_four_core_requirements_plus_anchors_for_at_least_one_criterion",
     requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
     sharedRequirement: "at_least_one_criterion_with_distinct_anchors",
@@ -62,10 +62,10 @@ export function exportFramework() {
     semanticQualityReviewRequired: true,
     criteriaCount: criteriaWithChecks.length,
     coreCompleteCriteriaCount: criteriaWithChecks.filter(criterion => criterion.qualityChecks.coreComplete).length,
-    allCriteriaCoreComplete: criteriaWithChecks.length >= 2 && criteriaWithChecks.every(criterion => criterion.qualityChecks.coreComplete),
+    allCriteriaCoreComplete: criteriaWithChecks.length >= 1 && criteriaWithChecks.every(criterion => criterion.qualityChecks.coreComplete),
     criteriaWithDistinctAnchorsCount: criteriaWithChecks.filter(criterion => criterion.qualityChecks.distinctAnchors).length,
     atLeastOneCriterionHasDistinctAnchors: criteriaWithChecks.some(criterion => criterion.qualityChecks.distinctAnchors),
-    taskStructurallyComplete: criteriaWithChecks.length >= 2 && criteriaWithChecks.every(criterion => criterion.qualityChecks.coreComplete) && criteriaWithChecks.some(criterion => criterion.qualityChecks.distinctAnchors)
+    taskStructurallyComplete: criteriaWithChecks.length >= 1 && criteriaWithChecks.every(criterion => criterion.qualityChecks.coreComplete) && criteriaWithChecks.some(criterion => criterion.qualityChecks.distinctAnchors)
   };
   downloadJson(`deeproject-framework-${framework.id.slice(0, 8)}.json`, {
     taskType: "participant_defined_domain",

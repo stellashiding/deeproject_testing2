@@ -95,7 +95,7 @@ export function criterionQualityChecks(criterion, domainScenario = {}) {
 const frameworkQualitySummary = (framework, domainScenario) => {
   const criteria = framework.criteria.map(criterion => criterionQualityChecks(criterion, domainScenario));
   return {
-    minimumCriteriaRequired: 2,
+    minimumCriteriaRequired: 1,
     criterionCompletionRule: "all_four_core_requirements_plus_anchors_for_at_least_one_criterion",
     requiredCoreChecks: ["specificName", "rhcaMapping", "observableDefinition", "evidenceRule"],
     sharedRequirement: "at_least_one_criterion_with_distinct_anchors",
@@ -112,10 +112,10 @@ const frameworkQualitySummary = (framework, domainScenario) => {
     semanticQualityReviewRequired: true,
     criteriaCount: criteria.length,
     coreCompleteCriteriaCount: criteria.filter(quality => quality.coreComplete).length,
-    allCriteriaCoreComplete: criteria.length >= 2 && criteria.every(quality => quality.coreComplete),
+    allCriteriaCoreComplete: criteria.length >= 1 && criteria.every(quality => quality.coreComplete),
     criteriaWithDistinctAnchorsCount: criteria.filter(quality => quality.distinctAnchors).length,
     atLeastOneCriterionHasDistinctAnchors: criteria.some(quality => quality.distinctAnchors),
-    taskStructurallyComplete: criteria.length >= 2 && criteria.every(quality => quality.coreComplete) && criteria.some(quality => quality.distinctAnchors),
+    taskStructurallyComplete: criteria.length >= 1 && criteria.every(quality => quality.coreComplete) && criteria.some(quality => quality.distinctAnchors),
     criteria
   };
 };
