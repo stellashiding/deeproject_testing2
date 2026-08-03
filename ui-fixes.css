@@ -124,3 +124,56 @@ html body .export-reminder-card .button.primary:hover {
   background: #2d2d2b !important;
   border-color: #2d2d2b !important;
 }
+
+/* Monochrome Framework Builder criterion selection and completion status. */
+html body .criteria-sidebar-header #addCriterion,
+html body .framework-sidebar .button.secondary {
+  color: #3f3f3b !important;
+  background: #ffffff !important;
+  border-color: #cfcfca !important;
+  box-shadow: none !important;
+}
+
+html body .criteria-sidebar-header #addCriterion:hover,
+html body .framework-sidebar .button.secondary:hover {
+  color: #171717 !important;
+  background: #f3f3f1 !important;
+  border-color: #9d9d98 !important;
+}
+
+html body .criterion-tab {
+  color: #4a4a46 !important;
+  background: #ffffff !important;
+  border-color: #ddddda !important;
+  box-shadow: none !important;
+}
+
+html body .criterion-tab:hover {
+  background: #f7f7f5 !important;
+  border-color: #b8b8b3 !important;
+}
+
+html body .criterion-tab.active {
+  color: #171717 !important;
+  background: #f0f0ed !important;
+  border-color: #777772 !important;
+  box-shadow: inset 3px 0 #171717 !important;
+}
+
+html body .criterion-tab.active b,
+html body .criterion-tab.active small {
+  color: #3f3f3b !important;
+}
+
+html body .quality-panel .progress-bar {
+  background: #e4e4e0 !important;
+  border-color: #ddddda !important;
+}
+
+html body .quality-panel .progress-bar i {
+  background: #171717 !important;
+}
+
+html body .quality-check.pass b {
+  color: #171717 !important;
+}
