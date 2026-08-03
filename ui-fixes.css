@@ -186,3 +186,74 @@ html body .quality-panel .progress-bar i {
 html body .quality-check.pass b {
   color: #171717 !important;
 }
+
+/* Lower-emphasis rating control for unbiased behavioral annotation. */
+html body .score-options {
+  overflow: visible !important;
+  border-color: #cfcfca !important;
+  border-radius: 7px !important;
+  background: #ffffff !important;
+}
+
+html body .score-options span {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  height: 44px !important;
+  color: #555550 !important;
+  background: #ffffff !important;
+  border-color: #cfcfca !important;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.05;
+}
+
+html body .score-options label:nth-child(1) span::after {
+  content: "Weak";
+}
+
+html body .score-options label:nth-child(2) span::after {
+  content: "Partial";
+}
+
+html body .score-options label:nth-child(3) span::after {
+  content: "Strong";
+}
+
+html body .score-options span::after {
+  color: #777773;
+  font-size: 8px;
+  font-weight: 550;
+  letter-spacing: 0.02em;
+}
+
+html body .score-options label:hover span {
+  background: #f7f7f5 !important;
+}
+
+html body .score-options input:checked + span {
+  z-index: 1;
+  color: #171717 !important;
+  background: #efefec !important;
+  border-color: #171717 !important;
+  box-shadow: inset 0 0 0 1.5px #171717 !important;
+  font-weight: 750;
+}
+
+html body .score-options input:checked + span::after {
+  color: #3f3f3b !important;
+  font-weight: 650;
+}
+
+html body .score-options input:checked + span::before {
+  content: "✓";
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  color: #171717;
+  font-size: 9px;
+  font-weight: 800;
+}
