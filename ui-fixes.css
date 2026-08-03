@@ -28,6 +28,15 @@ html body .primary-nav .nav-item[aria-disabled="true"] {
   color: #666666 !important;
 }
 
+/* User and AI avatars use neutral monochrome surfaces. */
+html body .speaker-avatar:not(.assistant),
+html body .message-card.user .speaker-avatar {
+  background: #ffffff !important;
+  border-color: #d5d5d1 !important;
+  color: #4a4a46 !important;
+  box-shadow: none !important;
+}
+
 /* Replace the robot emoji visually with a neutral AI label. */
 html body .speaker-avatar.assistant {
   position: relative;
