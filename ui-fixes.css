@@ -257,3 +257,48 @@ html body .score-options input:checked + span::before {
   font-size: 9px;
   font-weight: 800;
 }
+
+/* Remove the last blue states from Scenario Lab secondary actions and locked tags. */
+html body .evaluation-disclosure .disclosure-action {
+  color: #4a4a46 !important;
+}
+
+html body .evaluation-disclosure summary:hover .disclosure-action {
+  color: #171717 !important;
+}
+
+html body .next-response-hint {
+  color: #3f3f3b !important;
+  background: #f7f7f5 !important;
+  border-color: #d8d8d4 !important;
+}
+
+html body .next-response-hint b,
+html body .next-response-hint span {
+  color: #3f3f3b !important;
+}
+
+html body #rateNextResponse.button.secondary {
+  color: #171717 !important;
+  background: #ffffff !important;
+  border-color: #bdbdb8 !important;
+  box-shadow: none !important;
+}
+
+html body #rateNextResponse.button.secondary:hover {
+  color: #ffffff !important;
+  background: #171717 !important;
+  border-color: #171717 !important;
+}
+
+html body .tags-locked {
+  color: #4a4a46 !important;
+  background: #f7f7f5 !important;
+  border-color: #cfcfca !important;
+  border-style: dashed !important;
+}
+
+html body .tags-locked b,
+html body .tags-locked span {
+  color: #4a4a46 !important;
+}
