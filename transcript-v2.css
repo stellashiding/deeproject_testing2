@@ -72,7 +72,7 @@ html body .message-actions input[type="checkbox"] {
   accent-color: #171717;
 }
 
-/* The target response is identified by the full message surface, not a separate instruction line. */
+/* The response to rate is identified by the full message surface, not a separate instruction line. */
 html body .message-card.selected-target {
   padding-top: 13px !important;
   background: #efefec !important;
@@ -82,7 +82,7 @@ html body .message-card.selected-target {
 }
 
 html body .message-card.selected-target::before {
-  content: "TARGET RESPONSE";
+  content: "RESPONSE TO RATE";
   display: inline-flex;
   align-items: center;
   min-height: 20px;
