@@ -5,9 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Deeproject AI evaluation research prototype">
   <title>deeproject - AI Evaluation</title>
-  <link rel="stylesheet" href="./styles.css?v=20260801-1947">
-  <link rel="stylesheet" href="./onboarding.css?v=20260730-1505">
-  <link rel="stylesheet" href="./design-v2.css?v=20260803-1420">
+  <link rel="stylesheet" href="./styles.css?v=20260803-1444">
+  <link rel="stylesheet" href="./onboarding.css?v=20260803-1444">
+  <link rel="stylesheet" href="./design-v2.css?v=20260803-1444">
+  <style>
+    /* Critical monochrome product chrome. Kept inline so legacy theme rules cannot restore navy/blue. */
+    .topbar {
+      color: #fff !important;
+      background: #111 !important;
+      border-bottom: 1px solid #2b2b2b !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .topbar .brand,
+    .topbar .brand b { color: #fff !important; }
+    .topbar .brand small { color: #aaa !important; }
+    .topbar .brand-mark {
+      color: #111 !important;
+      background: #fff !important;
+      border-color: #fff !important;
+    }
+    .primary-nav {
+      color: #fff !important;
+      background: #181818 !important;
+      border-top: 0 !important;
+      border-bottom: 1px solid #303030 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .nav-item {
+      color: #9f9f9f !important;
+      background: transparent !important;
+    }
+    .nav-item:hover:not([aria-disabled="true"]) {
+      color: #fff !important;
+      background: #222 !important;
+    }
+    .nav-item.active {
+      color: #fff !important;
+      background: #252525 !important;
+      box-shadow: inset 0 -2px #fff !important;
+    }
+    .progress-text { color: #aaa !important; }
+    .topbar .profile-chip,
+    .topbar .status-pill,
+    .topbar .button.secondary,
+    .topbar .button.ghost {
+      color: #f3f3f3 !important;
+      background: #1b1b1b !important;
+      border-color: #4a4a4a !important;
+      box-shadow: none !important;
+    }
+    .topbar .button:hover,
+    .topbar .profile-chip:hover {
+      color: #fff !important;
+      background: #292929 !important;
+      border-color: #6a6a6a !important;
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
