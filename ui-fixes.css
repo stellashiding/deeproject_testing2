@@ -293,9 +293,24 @@ html body #rateNextResponse.button.secondary:hover {
 
 html body .tags-locked {
   color: #4a4a46 !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+html body .tags-locked > div {
+  padding: 16px 18px !important;
+  color: #4a4a46 !important;
   background: #f7f7f5 !important;
-  border-color: #cfcfca !important;
-  border-style: dashed !important;
+  border: 1px dashed #bdbdb8 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+html body .tags-locked::before,
+html body .tags-locked::after {
+  display: none !important;
+  content: none !important;
 }
 
 html body .tags-locked b,
