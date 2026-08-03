@@ -49,3 +49,78 @@ html body .speaker-avatar.assistant::after {
   font-weight: 750;
   line-height: 1;
 }
+
+/* Monochrome onboarding and activity transition surfaces. */
+html body .onboarding-card,
+html body .export-reminder-card,
+html body .activity-transition-card {
+  background: #ffffff !important;
+  border-color: #d8d8d4 !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.20) !important;
+}
+
+html body .export-reminder-icon,
+html body .activity-transition-card .export-reminder-icon {
+  color: #ffffff !important;
+  background: #171717 !important;
+  border: 1px solid #171717 !important;
+  box-shadow: none !important;
+}
+
+html body .tour-dots i {
+  background: #d2d2ce !important;
+}
+
+html body .tour-dots i.active {
+  background: #171717 !important;
+}
+
+html body .activity-preview > div {
+  background: #f7f7f5 !important;
+  border-color: #ddddda !important;
+}
+
+html body .activity-preview > div > b {
+  color: #ffffff !important;
+  background: #171717 !important;
+}
+
+html body .tour-interaction {
+  color: #3f3f3b !important;
+  background: #f7f7f5 !important;
+  border-color: #ddddda !important;
+}
+
+html body .tour-interaction b {
+  color: #8a8a85 !important;
+}
+
+html body .tour-checklist li {
+  color: #3f3f3b !important;
+  background: #f7f7f5 !important;
+  border-color: #ddddda !important;
+}
+
+html body .tour-checklist li::before {
+  color: #171717 !important;
+}
+
+html body .tour-note {
+  color: #3f3f3b !important;
+  background: #f7f7f5 !important;
+  border-left-color: #171717 !important;
+}
+
+html body .activity-transition-card > .button.primary,
+html body .export-reminder-card .button.primary {
+  color: #ffffff !important;
+  background: #171717 !important;
+  border-color: #171717 !important;
+  box-shadow: none !important;
+}
+
+html body .activity-transition-card > .button.primary:hover,
+html body .export-reminder-card .button.primary:hover {
+  background: #2d2d2b !important;
+  border-color: #2d2d2b !important;
+}
