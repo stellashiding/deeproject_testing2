@@ -317,3 +317,85 @@ html body .tags-locked b,
 html body .tags-locked span {
   color: #4a4a46 !important;
 }
+
+
+/* Criterion-level delete action: visually attached to each criterion card. */
+html body .criterion-list-item {
+  position: relative;
+}
+
+html body .criterion-list-item .criterion-tab {
+  padding-right: 46px;
+}
+
+html body .criterion-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: #6b6b66;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+html body .criterion-delete svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html body .criterion-delete:hover:not(:disabled) {
+  color: #9f2f2f;
+  background: #fff1f1;
+  border-color: #e8bcbc;
+}
+
+html body .criterion-delete:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+
+html body .criterion-delete:disabled {
+  color: #aaa9a3;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+html body .criterion-delete::after {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  z-index: 20;
+  width: max-content;
+  max-width: 210px;
+  padding: 5px 7px;
+  color: #ffffff;
+  background: #171717;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+  content: attr(data-tooltip);
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.2;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+html body .criterion-delete:hover::after,
+html body .criterion-delete:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
