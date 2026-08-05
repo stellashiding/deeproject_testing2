@@ -438,3 +438,102 @@ html body .quality-panel .framework-completion-card .button {
   min-width: 0;
   margin-top: 2px;
 }
+
+
+/* Scenario media: neutral illustration and consistent role icons. */
+html body .scenario-overview-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 154px;
+  gap: 12px;
+  align-items: stretch;
+  margin-top: 10px;
+}
+
+html body .scenario-overview-content .context-strip {
+  margin: 0 !important;
+}
+
+html body .scenario-illustration {
+  display: grid;
+  place-items: center;
+  min-height: 72px;
+  padding: 5px 8px;
+  overflow: hidden;
+  color: #555550;
+  background: #f7f7f5;
+  border: 1px solid #ddddda;
+  border-radius: 7px;
+}
+
+html body .scenario-illustration svg {
+  display: block;
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+}
+
+html body .scenario-illustration .scene-screen,
+html body .scenario-illustration .scene-panel,
+html body .scenario-illustration .scene-person,
+html body .scenario-illustration .scene-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html body .scenario-illustration .scene-panel {
+  fill: #ffffff;
+}
+
+html body .scenario-illustration .scene-spark {
+  fill: #171717;
+  stroke: none;
+}
+
+html body .speaker-avatar,
+html body .flow-actor i {
+  display: grid;
+  place-items: center;
+}
+
+html body .speaker-avatar svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html body .speaker-avatar.assistant {
+  color: #4a4a46 !important;
+  font-size: inherit !important;
+}
+
+html body .speaker-avatar.assistant::after {
+  display: none !important;
+  content: none !important;
+}
+
+html body .flow-actor i svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 760px) {
+  html body .scenario-overview-content {
+    grid-template-columns: 1fr;
+  }
+
+  html body .scenario-illustration {
+    display: none;
+  }
+}
