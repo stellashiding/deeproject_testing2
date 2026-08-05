@@ -32,8 +32,8 @@ function messageCard(turn) {
     <div class="message-meta"><span class="speaker-label"><span class="speaker-avatar ${turn.role}" aria-hidden="true">${turn.role === "user" ? "U" : "🤖"}</span><span>${turn.role === "user" ? "User" : "AI Assistant"}</span></span><span>Round ${turn.round}</span></div>
     <pre>${esc(turn.text)}</pre>
     <div class="message-actions">
-      ${selectable ? `<span class="fixed-target">Evaluate this response</span>` : ""}
       <label><input type="checkbox" data-evidence="${turn.id}" ${evidence ? "checked" : ""} ${state.humanEvaluationLocked ? "disabled" : ""}> Use as evidence</label>
+      ${selectable ? `<span class="rating-form-hint"><b>Next:</b> Complete the rating form on the right <span aria-hidden="true">→</span></span>` : ""}
     </div>
   </article>`;
 }
