@@ -399,3 +399,42 @@ html body .criterion-delete:focus-visible::after {
   opacity: 1;
   transform: translateY(0);
 }
+
+
+/* Keep the final Framework Builder action directly beneath its completion tracker. */
+html body .quality-panel .framework-completion-card {
+  display: grid;
+  align-items: stretch;
+  gap: 10px;
+  margin: 16px -16px -16px;
+  padding: 16px;
+  border: 0;
+  border-top: 1px solid #ddddda;
+  border-radius: 0 0 8px 8px;
+  background: #f7f7f5;
+  box-shadow: none;
+}
+
+html body .quality-panel .framework-completion-card.is-complete {
+  border-color: #ddddda;
+  background: #f7f7f5;
+}
+
+html body .quality-panel .framework-completion-card h2 {
+  margin: 3px 0 0;
+  color: #222220;
+  font-size: 14px;
+}
+
+html body .quality-panel .framework-completion-card p {
+  margin: 0;
+  color: #6b6b67;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+html body .quality-panel .framework-completion-card .button {
+  width: 100%;
+  min-width: 0;
+  margin-top: 2px;
+}
