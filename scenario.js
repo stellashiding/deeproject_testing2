@@ -7,13 +7,12 @@ const CORE_DIMENSIONS = ["R", "H", "C", "A"];
 const ICON_USER = `<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="8" r="3.25"></circle><path d="M5.75 19c.7-3.35 3.05-5.25 6.25-5.25s5.55 1.9 6.25 5.25"></path></svg>`;
 const ICON_AI = `<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 3.5l1.05 3.05L16 7.6l-2.95 1.05L12 11.7l-1.05-3.05L8 7.6l2.95-1.05L12 3.5Z"></path><path d="M6.4 12.1l.72 2.08 2.08.72-2.08.72L6.4 17.7l-.72-2.08-2.08-.72 2.08-.72.72-2.08Z"></path><path d="M17.25 13.35l.82 2.38 2.38.82-2.38.82-.82 2.38-.82-2.38-2.38-.82 2.38-.82.82-2.38Z"></path></svg>`;
 const SCENARIO_ILLUSTRATION = `<svg viewBox="0 0 180 96" focusable="false" aria-hidden="true">
-  <rect class="scene-screen" x="48" y="18" width="84" height="54" rx="5"></rect>
-  <path class="scene-line" d="M58 30h30M58 38h42M58 46h33"></path>
-  <rect class="scene-panel" x="99" y="28" width="23" height="27" rx="3"></rect>
-  <path class="scene-spark" d="M110.5 34l1.1 3.1 3.1 1.1-3.1 1.1-1.1 3.1-1.1-3.1-3.1-1.1 3.1-1.1 1.1-3.1Z"></path>
-  <path class="scene-line" d="M88 72l-3 8h10l-3-8M72 80h36"></path>
-  <circle class="scene-person" cx="28" cy="40" r="7"></circle>
-  <path class="scene-person" d="M14 68c1.6-12 7.1-18 14-18s12.4 6 14 18M135 61h25l7 19h-32zM140 68h14"></path>
+  <rect class="scene-panel" x="14" y="14" width="66" height="68" rx="5"></rect>
+  <path class="scene-line" d="M60 14v16h20M60 14l20 16M25 38h30M25 47h42M25 56h35M25 65h24"></path>
+  <path class="scene-line" d="M86 48h10M92 43l5 5-5 5"></path>
+  <rect class="scene-screen" x="99" y="22" width="67" height="52" rx="7"></rect>
+  <path class="scene-line" d="M109 58l-5 8 11-4M111 35h26M111 43h18"></path>
+  <path class="scene-spark" d="M150 35l1.25 3.55 3.55 1.25-3.55 1.25L150 44.6l-1.25-3.55-3.55-1.25 3.55-1.25L150 35Z"></path>
 </svg>`;
 const completedDimensions = (state, turnId) => new Set(state.ratedDimensionsByTurn?.[turnId] || []);
 const isTurnFullyRated = (state, turnId) => CORE_DIMENSIONS.every(key => completedDimensions(state, turnId).has(key));
@@ -112,7 +111,7 @@ export function renderScenario(root) {
       <div class="scenario-overview-body">
         <div class="scenario-overview-content">
           <div class="context-strip"><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div><div><span>Context</span><b>${esc(item.title)}</b></div></div>
-          <div class="scenario-illustration" role="img" aria-label="A worker using an AI assistant to draft a workplace document">${SCENARIO_ILLUSTRATION}</div>
+          <div class="scenario-illustration" role="img" aria-label="A workplace document connected to an AI assistant">${SCENARIO_ILLUSTRATION}</div>
         </div>
       </div>
     </details>
