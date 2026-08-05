@@ -443,8 +443,8 @@ html body .quality-panel .framework-completion-card .button {
 /* Scenario media: neutral illustration and consistent role icons. */
 html body .scenario-overview-content {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 154px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: stretch;
   margin-top: 10px;
 }
