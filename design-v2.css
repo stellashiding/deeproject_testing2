@@ -786,3 +786,28 @@ textarea:hover {
     padding: 12px;
   }
 }
+
+
+/* Scenario overview and flow: compact first-screen hierarchy */
+.scenario-page .scenario-overview {
+  margin-bottom: 8px;
+}
+
+.scenario-page .scenario-overview .context-strip {
+  grid-template-columns: 1fr 1.45fr 1.3fr;
+  margin-bottom: 0;
+}
+
+.scenario-page > .conversation-flow {
+  margin: 0 0 12px;
+}
+
+.scenario-page > .conversation-flow .flow-rounds {
+  min-height: 34px;
+}
+
+.scenario-page > .conversation-flow .flow-round {
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+}
