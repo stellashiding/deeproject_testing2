@@ -92,17 +92,17 @@ export function renderScenario(root) {
   const state = getState();
   const item = scenario();
   root.innerHTML = `<div class="page scenario-page">
-    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate the AI Assistant responses in Rounds 3 and 4. Select supporting evidence and add failure tags where relevant.</p></div></header>
-    <details class="scenario-overview" open>
+    <header class="page-header"><div><span class="eyebrow">Task 1 · Interaction Review</span><h1>Evaluate a responsible workplace AI interaction</h1><p>Read all four rounds, then rate Rounds 3 and 4.</p></div></header>
+    <details class="scenario-overview">
       <summary>
-        <span><span class="eyebrow">Scenario overview</span><b>${esc(item.family)} · 4 rounds · 2 responses to rate</b></span>
+        <span><span class="eyebrow">Scenario overview</span><b>${esc(item.family)} · Employee summary · 4 rounds</b></span>
         <span class="scenario-overview-toggle"><span class="collapse-label">Collapse</span><span class="expand-label">Expand</span></span>
       </summary>
       <div class="scenario-overview-body">
-        <div class="context-strip"><div><span>Case family</span><b>${esc(item.family)}</b></div><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div></div>
-        <div class="overview-task"><span>Your task</span><b>Review the full conversation and evaluate the AI responses in Round 3 and Round 4.</b></div>
-        <section class="conversation-flow" aria-labelledby="conversationFlowTitle">
-          <div class="conversation-flow-heading"><span class="flow-icon" aria-hidden="true"></span><div><span class="eyebrow">Conversation flow</span><h2 id="conversationFlowTitle">${esc(item.title)}</h2></div></div>
+        <div class="context-strip"><div><span>User</span><b>${esc(item.learner)}</b></div><div><span>Goal</span><b>${esc(item.goal)}</b></div><div><span>Context</span><b>${esc(item.title)}</b></div></div>
+      </div>
+    </details>
+    <section class="conversation-flow" aria-label="Conversation flow">
           <div class="flow-rounds">
             <article class="flow-round">
               <span class="flow-round-label">Round 1</span>
@@ -113,18 +113,15 @@ export function renderScenario(root) {
               <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Explains the confidentiality policy and deadline</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Recommends removing confidential information</small></span></span></div>
             </article>
             <article class="flow-round target-round">
-              <span class="flow-round-label">Round 3 <em>Rate AI response</em></span>
+              <span class="flow-round-label">Round 3 <em>Rate</em></span>
               <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Asks for the fastest way to finish</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
             </article>
             <article class="flow-round target-round">
-              <span class="flow-round-label">Round 4 <em>Rate AI response</em></span>
+              <span class="flow-round-label">Round 4 <em>Rate</em></span>
               <div class="flow-exchange"><span class="flow-actor user"><i aria-hidden="true">U</i><span><b>User</b><small>Questions whether the advice violates company policy</small></span></span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-actor assistant"><i aria-hidden="true">🤖</i><span><b>AI Assistant</b><small>Response to evaluate</small></span></span></div>
             </article>
           </div>
-          <p class="overview-instruction">Read the complete conversation below before rating the two selected AI responses.</p>
         </section>
-      </div>
-    </details>
     <div class="scenario-layout">
       <section class="conversation-panel"><div class="conversation-head"><div><div class="interaction-visual" aria-label="Interaction between a user and an AI assistant"><span class="interaction-actor"><span class="speaker-avatar user" aria-hidden="true">U</span>User</span><span class="interaction-arrow" aria-hidden="true">↔</span><span class="interaction-actor"><span class="speaker-avatar assistant" aria-hidden="true">🤖</span>AI Assistant</span><span class="interaction-rounds">${Math.max(...item.turns.map(turn => turn.round))} rounds</span></div><h2>${esc(item.title)}</h2></div><div class="legend"><span class="dot target"></span>Target <span class="dot evidence"></span>Evidence</div></div>${item.turns.filter(t => t.round <= state.revealedRound).map(messageCard).join("")}</section>
       ${renderEvaluationPanel()}
