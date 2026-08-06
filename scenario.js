@@ -127,7 +127,7 @@ export function renderScenario(root) {
           </div>
         </section>
     <div class="scenario-layout">
-      <section class="conversation-panel"><div class="conversation-head"><div><div class="interaction-visual" aria-label="Interaction between a user and an AI assistant"><span class="interaction-actor"><span class="speaker-avatar user" aria-hidden="true">${ICON_USER}</span>User</span><span class="interaction-arrow" aria-hidden="true">↔</span><span class="interaction-actor"><span class="speaker-avatar assistant" aria-hidden="true">${ICON_AI}</span>AI Assistant</span><span class="interaction-rounds">${Math.max(...item.turns.map(turn => turn.round))} rounds</span></div><h2>${esc(item.title)}</h2></div><div class="legend"><span class="dot target"></span>Target <span class="dot evidence"></span>Evidence</div></div>${item.turns.filter(t => t.round <= state.revealedRound).map(messageCard).join("")}</section>
+      <section class="conversation-panel"><div class="conversation-head"><div><div class="interaction-visual" aria-label="Interaction between a user and an AI assistant"><span class="interaction-actor"><span class="speaker-avatar user" aria-hidden="true">${ICON_USER}</span>User</span><span class="interaction-arrow" aria-hidden="true">↔</span><span class="interaction-actor"><span class="speaker-avatar assistant" aria-hidden="true">${ICON_AI}</span>AI Assistant</span><span class="interaction-rounds">${Math.max(...item.turns.map(turn => turn.round))} rounds</span></div><h2>${esc(item.title)}</h2></div></div>${item.turns.filter(t => t.round <= state.revealedRound).map(messageCard).join("")}</section>
       ${renderEvaluationPanel()}
     </div>
   </div>`;
