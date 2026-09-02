@@ -429,3 +429,31 @@
     width: 100%;
   }
 }
+
+
+/* Research consent step */
+.consent-notice {
+  margin: 16px 0;
+  padding: 14px 16px;
+  color: var(--ink);
+  background: #f1f1ef;
+  border: 1px solid #d8d8d5;
+  border-radius: 12px;
+}
+.consent-notice p { margin: 0; font-size: 13px; line-height: 1.55; }
+.consent-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 0 2px;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.consent-choice input {
+  flex: 0 0 auto;
+  width: 17px;
+  min-height: 17px;
+  margin-top: 1px;
+}

@@ -6,7 +6,7 @@
   <meta name="description" content="Deeproject AI evaluation research prototype">
   <title>deeproject - AI Evaluation</title>
   <link rel="stylesheet" href="./styles.css?v=20260803-1444">
-  <link rel="stylesheet" href="./onboarding.css?v=20260803-1444">
+  <link rel="stylesheet" href="./onboarding.css?v=20260902-consent">
   <link rel="stylesheet" href="./design-v2.css?v=20260805-compact">
   <link rel="stylesheet" href="./ui-fixes.css?v=20260805-scenario-media">
   <link rel="stylesheet" href="./transcript-v2.css?v=20260805-rating-hint">
@@ -107,6 +107,22 @@
         <button id="startWorkspace" class="button primary full">Continue</button>
         <small class="privacy-copy">Use the identifier approved in your study protocol. Do not enter another person's information.</small>
       </div>
+      <div id="consentStep" class="onboarding-step hidden">
+        <span class="eyebrow">Research data notice</span>
+        <h1 id="consentTitle">Before you continue</h1>
+        <div class="consent-notice">
+          <p>Your interactions with this system may be used for research. Identifying information will be removed before analysis, and research findings will not identify you.</p>
+        </div>
+        <label class="consent-choice">
+          <input id="researchConsent" type="checkbox">
+          <span>I have read this notice and agree to the collection and research use of my interaction data.</span>
+        </label>
+        <div id="consentError" class="form-error" role="alert"></div>
+        <div class="tour-actions">
+          <button id="consentBack" class="button secondary">Back</button>
+          <button id="acceptConsent" class="button primary">Agree and continue</button>
+        </div>
+      </div>
       <div id="productTourStep" class="onboarding-step hidden">
         <div class="tour-progress"><span id="tourProgress">1 of 2</span><div class="tour-dots" aria-hidden="true"><i></i><i></i></div></div>
         <article class="tour-page" data-tour-page="0">
@@ -152,6 +168,6 @@
     </section>
   </div>
 
-  <script type="module" src="./app.js?v=20260805-scenario-abstract"></script>
+  <script type="module" src="./app.js?v=20260902-consent"></script>
 </body>
 </html>
