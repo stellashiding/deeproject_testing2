@@ -126,7 +126,10 @@ export async function saveParticipantProfile() {
     email: state.participantProfile.email,
     identity_type: state.participantProfile.identityType,
     role: state.participantProfile.role,
-    domain: state.participantProfile.domain
+    domain: state.participantProfile.domain,
+    consent_accepted: state.participantProfile.consentAccepted,
+    consented_at: state.participantProfile.consentedAt,
+    consent_version: state.participantProfile.consentVersion
   });
 }
 
