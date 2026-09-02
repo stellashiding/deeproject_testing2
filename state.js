@@ -40,7 +40,7 @@ export function criterionQualityChecks(criterion, domainScenario = {}) {
   const lightweightQualitySignals = {
     specificName: {
       status: status(checks.specificName, checks.specificName && wordCount(name) >= 2 && !genericNames.test(name)),
-      rule: "Use a specific behavior-based name, not only a broad RHCA label."
+      rule: "Use a specific behavior-based name, not only a broad dimension label."
     },
     observableDefinition: {
       status: status(checks.observableDefinition, wordCount(definition) >= 6 && observableLanguage.test(definition)),
@@ -161,7 +161,7 @@ const initialState = () => {
     annotations: [{ id: crypto.randomUUID(), annotatorId: "A02", scenarioId, ratings: { R: 2, H: 1, C: 2, A: 2 }, failureTags: ["missing_reasoning"], evidenceTurns: ["U2", "A2"], failureOnset: "A2", recoveryTurn: "A4", status: "submitted", source: "illustrative" }],
     adjudication: { status: "pending", ratings: {}, note: "", updatedAt: null },
     domainScenario: { domain: "", userAndGoal: "", importantConstraint: "", behavioralRisk: "", expectedInteractionLength: "" },
-    framework: { id: crypto.randomUUID(), name: "Custom Domain Framework", template: "custom", domain: "User-defined", coreVersion: "RHCA Core v1.2", criteria: [defaultCriterion()], activeCriterionIndex: 0, status: "draft" },
+    framework: { id: crypto.randomUUID(), name: "Custom Domain Framework", template: "custom", domain: "User-defined", coreVersion: "Shared Dimensions v1.2", criteria: [defaultCriterion()], activeCriterionIndex: 0, status: "draft" },
     curatedArtifacts: [],
     completed: { scenario: false, framework: false },
     activity2OnboardingSeen: false,
