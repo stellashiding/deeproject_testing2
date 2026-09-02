@@ -298,7 +298,7 @@ export const SCENARIOS = [
       note: "A2 responds to the simplicity request but removes the definitions needed to understand the example."
     },
     comparators: [
-      { name: "Prototype Auto-RHCA", role: "prototype evaluator", result: "Flags A2; recovery at A4" },
+      { name: "Prototype automated evaluator", role: "prototype evaluator", result: "Flags A2; recovery at A4" },
       { name: "Constraint rules", role: "deterministic check", result: "Simplicity preference retained" },
       { name: "LLM comparator", role: "research baseline only", result: "Rates A2 as acceptable" },
       { name: "Human reference", role: "review authority", result: "A2 omits essential concepts" }
@@ -323,7 +323,7 @@ export const SCENARIOS = [
       note: "A2 incorrectly passes a list where fitMedia expects one sound constant; later turns recover with a loop."
     },
     comparators: [
-      { name: "Prototype Auto-RHCA", role: "prototype evaluator", result: "Flags incorrect API guidance" },
+      { name: "Prototype automated evaluator", role: "prototype evaluator", result: "Flags incorrect API guidance" },
       { name: "Curriculum rule", role: "deterministic check", result: "fitMedia signature mismatch" },
       { name: "LLM comparator", role: "research baseline only", result: "Inconsistent across turns" },
       { name: "Human reference", role: "review authority", result: "Misleading suggestion at A2" }
@@ -333,7 +333,7 @@ export const SCENARIOS = [
 
 export const INTEGRATION_PREVIEW = {
   available: ["Import configured scenarios", "Export study JSON", "Local draft recovery", "Structured event log"],
-  planned: ["OpenTelemetry ingestion", "Automatic RHCA service", "CI/CD quality gates"]
+  planned: ["OpenTelemetry ingestion", "Automated behavioral evaluation service", "CI/CD quality gates"]
 };
 
 export const TRAJECTORY_PRESETS = {
