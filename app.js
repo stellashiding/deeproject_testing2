@@ -164,7 +164,7 @@ async function submitOnboarding() {
   const identity = modal.querySelector("#identityInput").value.trim();
   const error = modal.querySelector("#onboardingError");
   if (!identity) { error.textContent = type === "email" ? "Enter an email address." : "Enter a participant ID."; return; }
-  if (type === "email" && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(identity)) { error.textContent = "Enter a valid email address."; return; }
+  if (type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identity)) { error.textContent = "Enter a valid email address."; return; }
   if (type === "participant_id" && !/^[A-Za-z0-9_-]{2,40}$/.test(identity)) { error.textContent = "Use 2-40 letters, numbers, hyphens, or underscores."; return; }
   error.textContent = "";
   const profile = {
