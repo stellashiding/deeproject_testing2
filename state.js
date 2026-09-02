@@ -127,7 +127,7 @@ const initialState = () => {
   return {
     route: "scenario",
     participantId: "",
-    participantProfile: { identityType: "participant_id", email: null, role: "AI evaluation researcher", domain: "" },
+    participantProfile: { identityType: "participant_id", email: null, role: "AI evaluation researcher", domain: "", consentAccepted: false, consentedAt: null, consentVersion: null },
     studySessionId: crypto.randomUUID(),
     startedAt: new Date().toISOString(),
     currentScenarioId: scenarioId,
