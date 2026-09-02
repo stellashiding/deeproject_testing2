@@ -15,8 +15,31 @@ export function renderProductDemo(root){
  <div class="analysis-layout"><section class="card flagged-list"><div class="section-title"><h2>Flagged sessions</h2><span>3 examples</span></div><p>Select a trajectory to inspect.</p>${sessions.map(x=>`<button class="flagged-session ${x.id===selected?"active":""}" data-session-id="${x.id}"><span><b>${x.id}</b><small>${esc(x.task)}</small></span><em>${esc(decisions[x.id]||x.signal)}</em></button>`).join("")}</section>
  <section class="card trajectory-review"><div class="section-title"><div><span class="eyebrow">${item.id} · ${item.dimension}</span><h2>${esc(item.task)}</h2></div><span class="priority">${item.priority}</span></div><div class="trajectory-summary"><span>Suggested signal <b>${item.signal}</b></span><span>Possible onset <b>${item.onset}</b></span><span>Risk prediction <b>${item.priority==="High"?"86%":"64%"}</b></span></div><div class="demo-transcript">${item.turns.map(([who,text],i)=>`<article class="${who==="Student"?"student":"assistant"}"><span>${who} · Turn ${Math.floor(i/2)+1}</span><p>${esc(text)}</p></article>`).join("")}</div><div class="structured-review-fields"><span><small>Dimension</small><b>${item.dimension}</b></span><span><small>Criterion</small><b>${item.signal}</b></span><span><small>Rating anchor</small><b>${item.priority==="High"?"1 · Needs attention":"2 · Partial"}</b></span><span><small>Evidence turns</small><b>${item.onset}–Turn 4</b></span><span><small>Persistence</small><b>${item.priority==="High"?"Likely":"Possible"}</b></span><span><small>Recovery</small><b>${item.id==="EDU-091"?"Observed":"Not observed"}</b></span></div><div class="human-review"><div><span class="eyebrow">Structured human review</span><h3>${decisions[item.id]?`Decision: ${decisions[item.id]}`:"Confirm, revise, or dismiss the suggestion"}</h3></div><div><button class="button primary" data-decision="Confirmed">Confirm</button><button class="button secondary" data-decision="Needs revision">Edit</button><button class="button ghost" data-decision="Dismissed">Dismiss</button></div></div></section></div>
  <section class="card downstream-panel"><div><span class="eyebrow">Human-confirmed evaluation signals</span><h2>Reuse review decisions</h2><p>Confirmed examples can support evaluation and continuous improvement.</p></div><div><span>Regression tests</span><span>Evaluation reports</span><span>Dataset review</span><span>Post-training signals</span></div></section><p class="prototype-note">Prototype screening illustrates rule-based checks, rubric-guided LLM judges, and trajectory risk scoring. LLM-judge outputs require structured human confirmation and may vary across models and prompts. No live student data is used.</p>`}</div>`;
- root.querySelector("#runDemoAnalysis")?.addEventListener("click",()=>{stage="analyzing";analysisStep=0;renderProductDemo(root);clearInterval(analysisTimer);analysisTimer=setInterval(()=>{analysisStep+=1;if(analysisStep>=4){clearInterval(analysisTimer);stage="results"}if(location.hash.slice(1)==="product-demo")renderProductDemo(root)},700)});
- root.querySelector("#restartDemo")?.addEventListener("click",()=>{clearInterval(analysisTimer);stage="ready";analysisStep=0;selected="EDU-184";Object.keys(decisions).forEach(key=>delete decisions[key]);renderProductDemo(root)});
+ root.querySelector("#runDemoAnalysis")?.addEventListener("click",()=>{
+  stage="analyzing";
+  analysisStep=0;
+  renderProductDemo(root);
+  clearTimeout(analysisTimer);
+  const advance=()=>{
+    analysisStep+=1;
+    if(analysisStep>=4){
+      stage="results";
+      renderProductDemo(root);
+      return;
+    }
+    renderProductDemo(root);
+    analysisTimer=setTimeout(advance,850);
+  };
+  analysisTimer=setTimeout(advance,850);
+ });
+ root.querySelector("#restartDemo")?.addEventListener("click",()=>{
+  clearTimeout(analysisTimer);
+  stage="ready";
+  analysisStep=0;
+  selected="EDU-184";
+  Object.keys(decisions).forEach(key=>delete decisions[key]);
+  renderProductDemo(root);
+ });
  root.querySelectorAll("[data-session-id]").forEach(b=>b.onclick=()=>{selected=b.dataset.sessionId;renderProductDemo(root)});
  root.querySelectorAll("[data-decision]").forEach(b=>b.onclick=()=>{decisions[selected]=b.dataset.decision;renderProductDemo(root)});
 }
