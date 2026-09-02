@@ -9,6 +9,7 @@ import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 const root = document.querySelector("#viewRoot");
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
 let tourPage = 0;
+let pendingProfile = null;
 
 function renderReview() {
   const s = getState();
@@ -86,14 +87,27 @@ function updateIdentityForm(type) {
 function showProfileStep() {
   const modal = document.querySelector("#onboardingModal");
   modal.querySelector("#profileSetupStep").classList.remove("hidden");
+  modal.querySelector("#consentStep").classList.add("hidden");
   modal.querySelector("#productTourStep").classList.add("hidden");
   modal.setAttribute("aria-labelledby", "onboardingTitle");
+}
+
+function showConsentStep() {
+  const modal = document.querySelector("#onboardingModal");
+  modal.querySelector("#profileSetupStep").classList.add("hidden");
+  modal.querySelector("#consentStep").classList.remove("hidden");
+  modal.querySelector("#productTourStep").classList.add("hidden");
+  modal.querySelector("#researchConsent").checked = false;
+  modal.querySelector("#consentError").textContent = "";
+  modal.setAttribute("aria-labelledby", "consentTitle");
+  setTimeout(() => modal.querySelector("#researchConsent").focus(), 20);
 }
 
 function showTourPage(index) {
   const modal = document.querySelector("#onboardingModal");
   tourPage = Math.max(0, Math.min(1, index));
   modal.querySelector("#profileSetupStep").classList.add("hidden");
+  modal.querySelector("#consentStep").classList.add("hidden");
   modal.querySelector("#productTourStep").classList.remove("hidden");
   modal.querySelectorAll("[data-tour-page]").forEach(page => page.classList.toggle("hidden", Number(page.dataset.tourPage) !== tourPage));
   modal.querySelector("#tourProgress").textContent = `${tourPage + 1} of 2`;
@@ -116,6 +130,33 @@ function openOnboarding() {
   setTimeout(() => modal.querySelector("#identityInput").focus(), 20);
 }
 
+async function saveOnboardingProfile(profile, isFirstSetup) {
+  const modal = document.querySelector("#onboardingModal");
+  mutate(s => {
+    const previousConsent = s.participantProfile || {};
+    s.participantId = profile.participantId;
+    s.participantProfile = {
+      identityType: profile.identityType,
+      email: profile.email,
+      role: null,
+      domain: "",
+      consentAccepted: isFirstSetup ? true : Boolean(previousConsent.consentAccepted),
+      consentedAt: isFirstSetup ? new Date().toISOString() : (previousConsent.consentedAt || null),
+      consentVersion: isFirstSetup ? "2026-09-02" : (previousConsent.consentVersion || null)
+    };
+  }, "participant.profile_saved", { identityType: profile.identityType, consentAccepted: isFirstSetup || Boolean(getState().participantProfile?.consentAccepted) });
+  await saveParticipantProfile();
+  await createStudySession();
+  updateChrome();
+  if (isFirstSetup) {
+    pendingProfile = null;
+    showTourPage(0);
+  } else {
+    modal.classList.add("hidden");
+    window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: `Workspace linked to ${profile.participantId}.` }));
+  }
+}
+
 async function submitOnboarding() {
   const modal = document.querySelector("#onboardingModal");
   const isFirstSetup = !getState().participantId;
@@ -123,28 +164,35 @@ async function submitOnboarding() {
   const identity = modal.querySelector("#identityInput").value.trim();
   const error = modal.querySelector("#onboardingError");
   if (!identity) { error.textContent = type === "email" ? "Enter an email address." : "Enter a participant ID."; return; }
-  if (type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identity)) { error.textContent = "Enter a valid email address."; return; }
+  if (type === "email" && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(identity)) { error.textContent = "Enter a valid email address."; return; }
   if (type === "participant_id" && !/^[A-Za-z0-9_-]{2,40}$/.test(identity)) { error.textContent = "Use 2-40 letters, numbers, hyphens, or underscores."; return; }
   error.textContent = "";
-  const participantId = type === "email" ? identity.toLowerCase() : identity;
-  mutate(s => {
-    s.participantId = participantId;
-    s.participantProfile = {
-      identityType: type,
-      email: type === "email" ? identity.toLowerCase() : null,
-      role: null,
-      domain: ""
-    };
-  }, "participant.profile_saved", { identityType: type });
-  await saveParticipantProfile();
-  await createStudySession();
-  updateChrome();
+  const profile = {
+    participantId: type === "email" ? identity.toLowerCase() : identity,
+    identityType: type,
+    email: type === "email" ? identity.toLowerCase() : null
+  };
   if (isFirstSetup) {
-    showTourPage(0);
-  } else {
-    modal.classList.add("hidden");
-    window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: `Workspace linked to ${participantId}.` }));
+    pendingProfile = profile;
+    showConsentStep();
+    return;
   }
+  await saveOnboardingProfile(profile, false);
+}
+
+async function acceptResearchConsent() {
+  const modal = document.querySelector("#onboardingModal");
+  const error = modal.querySelector("#consentError");
+  if (!modal.querySelector("#researchConsent").checked) {
+    error.textContent = "Please agree before continuing.";
+    return;
+  }
+  error.textContent = "";
+  if (!pendingProfile) {
+    showProfileStep();
+    return;
+  }
+  await saveOnboardingProfile(pendingProfile, true);
 }
 
 subscribe(() => {
@@ -173,6 +221,8 @@ document.querySelectorAll('[name="identityType"]').forEach(radio => radio.addEve
 }));
 document.querySelector("#startWorkspace").addEventListener("click", submitOnboarding);
 document.querySelector("#identityInput").addEventListener("keydown", event => { if (event.key === "Enter") submitOnboarding(); });
+document.querySelector("#consentBack").addEventListener("click", showProfileStep);
+document.querySelector("#acceptConsent").addEventListener("click", acceptResearchConsent);
 document.querySelector("#tourBack").addEventListener("click", () => showTourPage(tourPage - 1));
 document.querySelector("#tourNext").addEventListener("click", () => {
   if (tourPage < 1) return showTourPage(tourPage + 1);
