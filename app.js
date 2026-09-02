@@ -3,7 +3,7 @@ import { getState, mutate, reset, setState, subscribe, studyBundle } from "./sta
 import { clearLocal, createStudySession, exportFramework, exportStudyBundle, exportTrajectory, loadLocal, saveLocal, saveParticipantProfile, syncEvent, syncFramework, syncScenarioReview } from "./services.js";
 import { renderScenario } from "./scenario.js?v=20260805-scenario-abstract";
 import { renderFramework } from "./framework.js?v=20260805-1815";
-import { renderProductDemo } from "./product-demo.js?v=20260902";
+import { renderProductDemo } from "./product-demo.js?v=20260902b";
 import { renderLongHorizon } from "./long-horizon.js";
 import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 
