@@ -32,7 +32,8 @@ export function renderProductDemo(root){
   };
   analysisTimer=setTimeout(advance,850);
  });
- root.querySelector("#showResultsNow")?.addEventListener("click",()=>{clearTimeout(analysisTimer);analysisStep=4;stage="results";renderProductDemo(root)});\n root.querySelector("#restartDemo")?.addEventListener("click",()=>{
+ root.querySelector("#showResultsNow")?.addEventListener("click",()=>{clearTimeout(analysisTimer);analysisStep=4;stage="results";renderProductDemo(root)});
+ root.querySelector("#restartDemo")?.addEventListener("click",()=>{
   clearTimeout(analysisTimer);
   stage="ready";
   analysisStep=0;
