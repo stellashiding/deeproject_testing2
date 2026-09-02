@@ -3,6 +3,7 @@ import { getState, mutate, reset, setState, subscribe, studyBundle } from "./sta
 import { clearLocal, createStudySession, exportFramework, exportStudyBundle, exportTrajectory, loadLocal, saveLocal, saveParticipantProfile, syncEvent, syncFramework, syncScenarioReview } from "./services.js";
 import { renderScenario } from "./scenario.js?v=20260805-scenario-abstract";
 import { renderFramework } from "./framework.js?v=20260805-1815";
+import { renderProductDemo } from "./product-demo.js?v=20260902";
 import { renderLongHorizon } from "./long-horizon.js";
 import { bindGovernanceEvents, governanceSectionMarkup } from "./governance.js";
 
@@ -39,10 +40,13 @@ function renderReview() {
 
 function renderRoute() {
   const state = getState();
-  const route = state.route === "framework" && !state.completed.scenario ? "scenario" : state.route;
+  let route = state.route;
+  if (route === "framework" && !state.completed.scenario) route = "scenario";
+  if (route === "product-demo" && !state.completed.framework) route = state.completed.scenario ? "framework" : "scenario";
   if (route !== state.route) setState({ route }, "navigation.blocked");
   document.querySelectorAll("[data-route]").forEach(button => button.classList.toggle("active", button.dataset.route === route));
   if (route === "framework") renderFramework(root);
+  else if (route === "product-demo") renderProductDemo(root);
   else renderScenario(root);
   root.focus({ preventScroll: true });
 }
@@ -50,11 +54,14 @@ function renderRoute() {
 function updateChrome() {
   const state = getState();
   const complete = Object.values(state.completed).filter(Boolean).length;
-  document.querySelector("#progressText").textContent = `${complete} of 2 tasks complete`;
+  document.querySelector("#progressText").textContent = `${complete} of 2 research tasks complete`;
   document.querySelector("#profileButton").textContent = state.participantId || "Set participant";
   const frameworkNav = document.querySelector('[data-route="framework"]');
   frameworkNav.setAttribute("aria-disabled", String(!state.completed.scenario));
   frameworkNav.title = state.completed.scenario ? "" : "Complete Activity 1 to unlock";
+  const productDemoNav = document.querySelector('[data-route="product-demo"]');
+  productDemoNav.setAttribute("aria-disabled", String(!state.completed.framework));
+  productDemoNav.title = state.completed.framework ? "" : "Complete Activity 2 to unlock";
 }
 
 function openActivity2Onboarding() {
@@ -204,6 +211,9 @@ document.querySelectorAll("[data-route]").forEach(button => button.addEventListe
   if (button.dataset.route === "framework" && !getState().completed.scenario) {
     return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Complete Activity 1 to unlock Framework Builder." }));
   }
+  if (button.dataset.route === "product-demo" && !getState().completed.framework) {
+    return window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Complete Activity 2 to unlock Product Demo." }));
+  }
   setState({ route: button.dataset.route }, "navigation.changed");
   location.hash = button.dataset.route;
   renderRoute();
@@ -253,7 +263,10 @@ window.addEventListener("deeproject:toast", event => {
 window.addEventListener("deeproject:event", event => {
   const latest = getState().events.at(-1);
   if (latest) syncEvent(latest);
-  if (event.detail.type === "task.framework_completed") syncFramework();
+  if (event.detail.type === "task.framework_completed") {
+    syncFramework();
+    window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Activity 3 · Product Demo is now unlocked." }));
+  }
   if (event.detail.type === "task.scenario_completed") {
     syncScenarioReview();
     const toast = document.querySelector("#toast");
@@ -264,10 +277,14 @@ window.addEventListener("deeproject:event", event => {
 });
 window.addEventListener("hashchange", () => {
   const route = location.hash.slice(1);
-  if (["scenario", "framework"].includes(route)) {
+  if (["scenario", "framework", "product-demo"].includes(route)) {
     if (route === "framework" && !getState().completed.scenario) {
       location.hash = "scenario";
       window.dispatchEvent(new CustomEvent("deeproject:toast", { detail: "Complete Activity 1 to unlock Framework Builder." }));
+      return;
+    }
+    if (route === "product-demo" && !getState().completed.framework) {
+      location.hash = getState().completed.scenario ? "framework" : "scenario";
       return;
     }
     setState({ route }, "navigation.hash_changed");
@@ -278,8 +295,10 @@ window.addEventListener("hashchange", () => {
 loadLocal();
 if (getState().participantId) createStudySession();
 const initialRoute = location.hash.slice(1);
-if (["scenario", "framework"].includes(initialRoute)) mutate(s => {
-  s.route = initialRoute === "framework" && !s.completed.scenario ? "scenario" : initialRoute;
+if (["scenario", "framework", "product-demo"].includes(initialRoute)) mutate(s => {
+  if (initialRoute === "framework" && !s.completed.scenario) s.route = "scenario";
+  else if (initialRoute === "product-demo" && !s.completed.framework) s.route = s.completed.scenario ? "framework" : "scenario";
+  else s.route = initialRoute;
 }, null);
 updateChrome();
 renderRoute();
